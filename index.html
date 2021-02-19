@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <title>WoW Historical Token Prices</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Make smart WoW Token purchasing decisions">
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.0/cash.min.js" integrity="sha512-sgDgZX/GgfD7qSeMjPN/oE9EQgXZJW55FIjdexVT60QerG2gAWhR9QDQEGt3O90Dy9jVcwMWsoTMhLgldIiKXw==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.9.8/dayjs.min.js" integrity="sha512-kZ+x2gdehn6OZMWZSp3Vt5R+v9hQTYEATQwaUfWquhxbvNVAy6IRtYs7asdyxKUTqG0I5ZqBqnzcBrpnHJCAGw==" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous"></script>
+        <script src="js/token.js"></script>
+    </head>
+    <body>
+        <div class="flex-container">
+            <div><h1>1 Token = <u id="token">0</u> Gold</h1></div>
+            <div>
+                <canvas id="token-chart"></canvas>
+                <div id="option_select">
+                    <p>
+                        Region: 
+                        <a href="javascript:updateRegionPreference('us')">US</a>
+                        <a href="javascript:updateRegionPreference('eu')">EU</a>
+                        <a href="javascript:updateRegionPreference('kr')">KR</a>
+                        <a href="javascript:updateRegionPreference('tw')">TW</a>
+                        | Time Selection:
+                        <a href="javascript:updateTimePreference('48h')">2d</a>
+                        <a href="javascript:updateTimePreference('72h')">3d</a>
+                        <a href="javascript:updateTimePreference('120h')">5d</a>
+                        <a href="javascript:updateTimePreference('168h')">7d</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
