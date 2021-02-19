@@ -1,0 +1,1 @@
+These are the public assets for the [wowtoken.app](https://wowtoken.app) website, served off Amazon S3 behind CloudFront.
