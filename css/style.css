@@ -319,6 +319,11 @@ h6 {
     line-height: 75px;
     font-size: 30px;
 }
+p {
+    margin: 0px;
+    padding: 0px;
+    line-height: 3em;
+}
 
 
 #option_select {

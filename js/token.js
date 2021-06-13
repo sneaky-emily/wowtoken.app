@@ -20,15 +20,18 @@ function populateChart() {
             datasets: [{
                 borderColor: 'gold',
                 label: current_region_selection.toUpperCase() + " WoW Token Price",
-                data: chart_js_data
+                data: chart_js_data,
+                cubicInterpolationMode: 'monotone',
+                pointRadius: 0
             }]
         },
         options: {
             scales: {
-                xAxes: [{
-                    type: 'time'
-                }]
-            }
+                x: {
+                    type: 'time',
+                    
+                }
+            },
         }
     })
 }
@@ -95,6 +98,7 @@ async function updateChartData() {
 function formatToken() {
     $("#token").html(current_price_hash[current_region_selection].toLocaleString());
 }
+
 
 $(document).ready(function() {
     callUpdateURL()

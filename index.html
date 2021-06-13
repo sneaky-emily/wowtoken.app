@@ -5,13 +5,15 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Track current and historical gold prices for the World of Warcraft in game token, including the US, EU, TW, and KR regions. Prices updated every minute.">
-	<link rel="preconnect" href="https://data.wowtoken.app">
-	<link rel="dns-prefetch" href="https://data.wowtoken.app">
+	    <link rel="preconnect" href="https://data.wowtoken.app">
+	    <link rel="dns-prefetch" href="https://data.wowtoken.app">
         <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css" integrity="sha512-C7hOmCgGzihKXzyPU/z4nv97W0d9bv4ALuuEbSf6hm93myico9qa0hv4dODThvCsqQUmKmLcJmlpRmCaApr83g==" crossorigin="anonymous" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.0/cash.min.js" integrity="sha512-sgDgZX/GgfD7qSeMjPN/oE9EQgXZJW55FIjdexVT60QerG2gAWhR9QDQEGt3O90Dy9jVcwMWsoTMhLgldIiKXw==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.9.8/dayjs.min.js" integrity="sha512-kZ+x2gdehn6OZMWZSp3Vt5R+v9hQTYEATQwaUfWquhxbvNVAy6IRtYs7asdyxKUTqG0I5ZqBqnzcBrpnHJCAGw==" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js" integrity="sha512-SuxO9djzjML6b9w9/I07IWnLnQhgyYVSpHZx0JV97kGBfTIsUYlWflyuW4ypnvhBrslz1yJ3R+S14fdCWmSmSA==" crossorigin="anonymous"></script>
+        <link rel="preload" href="https://data.wowtoken.app/token/current.json" as="fetch" type="application/json" crossorigin="anonymous">
+        <link rel="preload" href="https://data.wowtoken.app/token/history/us/48h.json" as="fetch" type="application/json" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@3.3.2/dist/chart.min.js" integrity="sha256-qoN08nWXsFH+S9CtIq99e5yzYHioRHtNB9t2qy1MSmc=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/luxon@1.27.0/build/global/luxon.min.js" integrity="sha256-cJnCTPRTD3OUjTD4Ml0WEMsmTiLl71arKaZ9DEZJk0o=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.0.0/dist/chartjs-adapter-luxon.min.js" integrity="sha256-q8w2Mgq36OwAFKLLbdSi+aCHAb6WJhIswZ7N6k+xsf0=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/cash-dom@8.1.0/dist/cash.min.js" integrity="sha256-xb3jchN35UY4gwqlR0mSg/dtv25q4yWmXmIg/WscJYo=" crossorigin="anonymous"></script>
         <script src="js/token.js"></script>
     </head>
     <body>
@@ -26,7 +28,9 @@
                         <a href="javascript:updateRegionPreference('eu')">EU</a>
                         <a href="javascript:updateRegionPreference('kr')">KR</a>
                         <a href="javascript:updateRegionPreference('tw')">TW</a>
-                        | Time Selection:
+                    </p>
+                    <p>
+                        Time Selection:
                         <a href="javascript:updateTimePreference('48h')">2d</a>
                         <a href="javascript:updateTimePreference('72h')">3d</a>
                         <a href="javascript:updateTimePreference('120h')">5d</a>
