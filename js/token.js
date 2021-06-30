@@ -1,6 +1,6 @@
 var current_token_int = 0;
 var current_region_selection = 'us'
-var current_time_selection = '48h'
+var current_time_selection = '72h'
 var current_price_hash = {
     us: 0,
     eu: 0,
