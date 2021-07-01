@@ -65,7 +65,7 @@ function populateChart() {
 
 
 async function callUpdateURL() {
-    let resp = await fetch("https://piwv24uske.execute-api.us-east-1.amazonaws.com/token/current.json");
+    let resp = await fetch("https://data.wowtoken.app/token/current.json");
     let data = await resp.json();
     updateTokens(data);
 }
@@ -104,7 +104,7 @@ function updateTimePreference(newTime) {
 }
 
 async function pullChartData() {
-    let resp = await fetch("https://piwv24uske.execute-api.us-east-1.amazonaws.com/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
+    let resp = await fetch("https://data.wowtoken.app/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
     let chart_data = await resp.json();
     var new_chart_js_data = []
     for (var i = 0; i < chart_data.length; i++) {
