@@ -7,13 +7,13 @@ phases:
     commands:
       - echo Installing dependencies...
       - npm install
-    build:
-      commands:
+  build:
+    commands:
         - echo Starting Build Stage
         - npm run build
-    post-build:
-      commands:
-        - echo Build completed on `date`
+  post-build:
+    commands:
+      - echo Build completed on `date`
 
 artifacts:
   files:
