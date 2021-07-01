@@ -14,9 +14,11 @@ phases:
     post-build:
       commands:
         - echo Build completed on `date`
+
 artifacts:
   files:
-    - 'dist/**/*''
+    - 'dist/**/*'
+
 cache:
   paths:
     - '/root/.npm/**/*'
