@@ -21,7 +21,7 @@ audio,
 canvas,
 video {
     display: inline-block;
-    width: 90%;
+    width: 93s%;
     aspect-ratio: 2;
 }
 audio:not([controls]) {

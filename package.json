@@ -1,0 +1,21 @@
+{
+  "name": "wowtoken.app",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "devDependencies": {
+    "css-loader": "^5.2.6",
+    "style-loader": "^3.0.0",
+    "webpack": "^5.41.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "cash-dom": "^8.1.0",
+    "chart.js": "^3.4.0",
+    "chartjs-adapter-luxon": "^1.0.0",
+    "luxon": "^1.27.0"
+  }
+}
