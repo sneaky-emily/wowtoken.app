@@ -87,7 +87,7 @@ function updateRegionalToken(region, data) {
     
 }
 
-function updateRegionPreference(newRegion) {
+export function updateRegionPreference(newRegion) {
     if (newRegion != current_region_selection) {
         token_chart.destroy();
         current_region_selection = newRegion;
@@ -95,7 +95,7 @@ function updateRegionPreference(newRegion) {
     formatToken();
     pullChartData().then(populateChart);
 }
-function updateTimePreference(newTime) {
+export function updateTimePreference(newTime) {
     if (newTime != current_time_selection) {
         token_chart.destroy();
         current_time_selection = newTime;
