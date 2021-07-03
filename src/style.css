@@ -336,6 +336,16 @@ p {
     color: gold;
 }
 
+#source > p {
+    font-size: 15px;
+    color: grey;
+}
+
+#source > p > a {
+    font-size: 15px;
+    color: darkgrey;
+}
+
 #token-chart {
     color: white;
 }
