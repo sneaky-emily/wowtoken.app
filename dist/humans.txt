@@ -2,7 +2,7 @@
 	Main Developer: Emily
 	Contact: hello [at] emily.sh
 	Twitter: @sneaky_emily
-    Site: https://emilyd.xyz
+	Site: https://emilyd.xyz
 	From: Florida, USA
 
 /* THANKS */
@@ -12,5 +12,5 @@
 	Last update:2021/07/02
 	Language: English
 	Doctype: HTML5
-    Components: Chart.js, Dayjs, Webpack
+	Components: Chart.js, Dayjs, Webpack
 	Software: VSCode
