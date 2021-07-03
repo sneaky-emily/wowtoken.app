@@ -125,11 +125,35 @@ function formatToken() {
     $("#token").html(current_price_hash[current_region_selection].toLocaleString());
 }
 
+function detectURLQuery() {
+    const urlSearchParams = new URLSearchParams(window.location.search)
+    const allowedRegions = ['us', 'eu', 'tw', 'kr']
+    if (urlSearchParams.has('region')) {
+        if (allowedRegions.includes(urlSearchParams.get('region').toLowerCase())) {
+            current_region_selection = urlSearchParams.get('region').toLowerCase()
+        } else {
+            console.log("An incorrect or malformed region selection was made in the query string")
+        }
+    }
+    // In the future, we will allow all the times to be selected,
+    // once I come up with a good reduction algorithm.
+    // For larger time selections, it's currently hardcoded into the backend
+    const allowedTimes = ['72h', '167h', '336h', '30d', '90d', '6m', 'all']
+    if (urlSearchParams.has('time')) {
+        if (allowedTimes.includes(urlSearchParams.get('time').toLowerCase())) {
+            current_time_selection = urlSearchParams.get('time').toLowerCase()
+        } else {
+            console.log("An incorrect or malformed time selection was made in the query string")
+        }
+    }
+}
+
 
 $(document).ready(function() {
-    callUpdateURL()
+    detectURLQuery();
+    callUpdateURL();
     setInterval(callUpdateURL, 60*1000);
     pullChartData().then(populateChart);
-    setInterval(updateChartData, 15*60*1000)
+    setInterval(updateChartData, 15*60*1000);
 });
 
