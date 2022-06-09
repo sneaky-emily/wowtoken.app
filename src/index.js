@@ -25,8 +25,8 @@ Chart.register(
     Tooltip
 )
 
-var current_region_selection = 'us'
-var current_time_selection = '72h'
+var current_region_selection = ''
+var current_time_selection = ''
 var current_price_hash = {
     us: 0,
     eu: 0,
@@ -138,7 +138,7 @@ function detectURLQuery() {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
-    const allowedTimes = ['72h', '167h', '336h', '30d', '90d', '6m', 'all']
+    const allowedTimes = ['72h', '167h', '336h', '30d', '90d', '1y', '6m', 'all']
     if (urlSearchParams.has('time')) {
         if (allowedTimes.includes(urlSearchParams.get('time').toLowerCase())) {
             current_time_selection = urlSearchParams.get('time').toLowerCase()
@@ -150,10 +150,17 @@ function detectURLQuery() {
 
 
 $(document).ready(function() {
+    document.getElementById('region').addEventListener('change', function() {
+        updateRegionPreference(this.value);
+    });
+    current_region_selection = document.getElementById('region').value;
+    document.getElementById('time').addEventListener('change', function() {
+        updateTimePreference(this.value);
+    });
+    current_time_selection = document.getElementById('time').value;
     detectURLQuery();
     callUpdateURL();
     setInterval(callUpdateURL, 60*1000);
     pullChartData().then(populateChart);
-    setInterval(updateChartData, 15*60*1000);
 });
 
