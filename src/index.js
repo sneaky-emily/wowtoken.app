@@ -11,7 +11,6 @@ import {
 } from 'chart.js';
 import $ from 'cash-dom';
 import 'chartjs-adapter-dayjs-3';
-import './style.css';
 
 
 Chart.register(
@@ -25,17 +24,17 @@ Chart.register(
     Tooltip
 )
 
-var current_region_selection = ''
-var current_time_selection = ''
-var current_price_hash = {
+let current_region_selection = ''
+let current_time_selection = ''
+const current_price_hash = {
     us: 0,
     eu: 0,
     kr: 0,
     tw: 0
 }
-var chart_js_data;
-var ctx;
-var token_chart;
+let chart_js_data;
+let ctx;
+let token_chart;
 
 
 function populateChart() {
@@ -77,7 +76,7 @@ function updateTokens(data) {
 }
 
 function updateRegionalToken(region, data) {
-    if (current_price_hash[region] != data['price_data'][region]) {
+    if (current_price_hash[region] !== data['price_data'][region]) {
         current_price_hash[region] = data['price_data'][region];
         if (region === current_region_selection) {
             formatToken();
@@ -87,7 +86,7 @@ function updateRegionalToken(region, data) {
 }
 
 export function updateRegionPreference(newRegion) {
-    if (newRegion != current_region_selection) {
+    if (newRegion !== current_region_selection) {
         token_chart.destroy();
         current_region_selection = newRegion;
     }
@@ -95,7 +94,7 @@ export function updateRegionPreference(newRegion) {
     pullChartData().then(populateChart);
 }
 export function updateTimePreference(newTime) {
-    if (newTime != current_time_selection) {
+    if (newTime !== current_time_selection) {
         token_chart.destroy();
         current_time_selection = newTime;
     }
@@ -105,9 +104,9 @@ export function updateTimePreference(newTime) {
 async function pullChartData() {
     let resp = await fetch("https://data.wowtoken.app/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
     let chart_data = await resp.json();
-    var new_chart_js_data = []
-    for (var i = 0; i < chart_data.length; i++) {
-        var datum = {
+    let new_chart_js_data = []
+    for (let i = 0; i < chart_data.length; i++) {
+        let datum = {
             x: chart_data[i]['time'],
             y: chart_data[i]['value']
         }

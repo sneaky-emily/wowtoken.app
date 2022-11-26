@@ -1,9 +1,6 @@
 /* Adapted from https://github.com/thomasf/solarized-css and https://github.com/altercation/solarized
    Portions Copyright (c) 2015 Thomas Frössman and Copyright (c) 2011 Ethan Schoonover */
 
-@import url(https://fonts.googleapis.com/css?family=Inconsolata);
-@import url(https://fonts.googleapis.com/css?family=PT+Sans);
-@import url(https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700);
 article,
 aside,
 details,
@@ -163,11 +160,11 @@ table {
     border-spacing: 0;
 }
 html {
-    font-family: 'PT Sans', sans-serif;
+    font-family: sans-serif;
 }
 pre,
 code {
-    font-family: 'Inconsolata', sans-serif;
+    font-family: monospace;
 }
 h1,
 h2,
@@ -175,7 +172,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'PT Sans Narrow', sans-serif;
+    font-family: sans-serif;
     font-weight: 700;
 }
 html {
