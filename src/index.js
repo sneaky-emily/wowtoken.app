@@ -80,9 +80,20 @@ function updateRegionalToken(region, data) {
         current_price_hash[region] = data['price_data'][region];
         if (region === current_region_selection) {
             formatToken();
+            add_data_to_chart(region, data);
         }
     }
     
+}
+
+function add_data_to_chart(region, data) {
+    if (token_chart) {
+        const datum = {'time': data['current_time'], 'value': data['price_data'][region]}
+        token_chart.data.datasets.forEach((dataset) => {
+            dataset.data.push(datum);
+        })
+        token_chart.update();
+    }
 }
 
 export function updateRegionPreference(newRegion) {
