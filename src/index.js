@@ -51,6 +51,10 @@ function populateChart() {
             }]
         },
         options: {
+            interaction: {
+                intersect: false,
+                mode: "index"
+            },
             scales: {
                 x: {
                     type: 'time',
