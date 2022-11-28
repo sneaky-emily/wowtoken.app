@@ -151,7 +151,7 @@ function detectURLQuery() {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
-    const allowedTimes = ['72h', '167h', '336h', '720h', '30d', '90d', '1y', '6m', 'all']
+    const allowedTimes = ['72h', '167h', '336h', '720h', '30d', '90d', '1y', '2y', '6m', 'all']
     if (urlSearchParams.has('time')) {
         if (allowedTimes.includes(urlSearchParams.get('time').toLowerCase())) {
             current_time_selection = urlSearchParams.get('time').toLowerCase()
