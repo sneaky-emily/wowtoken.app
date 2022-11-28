@@ -116,7 +116,7 @@ export function updateTimePreference(newTime) {
 }
 
 async function pullChartData() {
-    let resp = await fetch("https://data.wowtoken.app/next/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
+    let resp = await fetch("https://data.wowtoken.app/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
     let chart_data = await resp.json();
     let new_chart_js_data = []
     for (let i = 0; i < chart_data.length; i++) {
