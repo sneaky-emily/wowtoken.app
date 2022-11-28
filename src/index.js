@@ -116,7 +116,7 @@ export function updateTimePreference(newTime) {
 }
 
 async function pullChartData() {
-    let resp = await fetch("https://data.wowtoken.app/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
+    let resp = await fetch("https://data.wowtoken.app/next/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
     let chart_data = await resp.json();
     let new_chart_js_data = []
     for (let i = 0; i < chart_data.length; i++) {
@@ -151,7 +151,7 @@ function detectURLQuery() {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
-    const allowedTimes = ['72h', '167h', '336h', '30d', '90d', '1y', '6m', 'all']
+    const allowedTimes = ['72h', '167h', '336h', '720h', '30d', '90d', '1y', '6m', 'all']
     if (urlSearchParams.has('time')) {
         if (allowedTimes.includes(urlSearchParams.get('time').toLowerCase())) {
             current_time_selection = urlSearchParams.get('time').toLowerCase()
