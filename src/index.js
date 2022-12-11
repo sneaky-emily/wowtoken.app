@@ -98,17 +98,41 @@ function add_data_to_chart(region, data) {
     }
 }
 
+function addLoader() {
+    let loader = document.getElementById('loader');
+    if (!loader) {
+        const blank_div = document.createElement('div');
+        let loaderNode = blank_div.cloneNode();
+        loaderNode.id = 'loader';
+        loaderNode.className = 'lds-ripple';
+        loaderNode.appendChild(blank_div.cloneNode());
+        loaderNode.appendChild(blank_div.cloneNode());
+        let chartNode = document.getElementById('token-chart');
+        chartNode.before(loaderNode);
+    }
+}
+
+function removeLoader () {
+    let loader = document.getElementById('loader');
+    if (loader) {
+        loader.remove();
+    }
+}
+
 export function updateRegionPreference(newRegion) {
     if (newRegion !== current_region_selection) {
         token_chart.destroy();
+        addLoader();
         current_region_selection = newRegion;
     }
     formatToken();
     pullChartData().then(populateChart);
 }
+
 export function updateTimePreference(newTime) {
     if (newTime !== current_time_selection) {
         token_chart.destroy();
+        addLoader();
         current_time_selection = newTime;
     }
     pullChartData().then(populateChart);
@@ -126,6 +150,7 @@ async function pullChartData() {
         new_chart_js_data.push(datum);
     }
     chart_js_data = new_chart_js_data;
+    removeLoader();
 }
 
 async function updateChartData() {
@@ -143,6 +168,12 @@ function detectURLQuery() {
     if (urlSearchParams.has('region')) {
         if (allowedRegions.includes(urlSearchParams.get('region').toLowerCase())) {
             current_region_selection = urlSearchParams.get('region').toLowerCase()
+            let region_ddl = document.getElementById('region')
+            for (let i = 0; i < region_ddl.options.length; i++){
+                if (region_ddl.options[i].value === current_region_selection) {
+                    region_ddl.options[i].selected = true;
+                }
+            }
         } else {
             console.log("An incorrect or malformed region selection was made in the query string")
         }
@@ -150,10 +181,16 @@ function detectURLQuery() {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
-    const allowedTimes = ['72h', '168h', '336h', '720h', '30d', '90d', '1y', '2y', '6m', 'all'];
+    const validTimes = ['72h', '168h', '336h', '720h', '30d', '90d', '1y', '2y', '6m', 'all'];
     if (urlSearchParams.has('time')) {
-        if (allowedTimes.includes(urlSearchParams.get('time').toLowerCase())) {
+        if (validTimes.includes(urlSearchParams.get('time').toLowerCase())) {
             current_time_selection = urlSearchParams.get('time').toLowerCase();
+            let time_ddl = document.getElementById('time')
+            for (let i = 0; i < time_ddl.options.length; i++){
+                if (time_ddl.options[i].value === current_time_selection) {
+                    time_ddl.options[i].selected = true;
+                }
+            }
         } else {
             console.log("An incorrect or malformed time selection was made in the query string");
         }
