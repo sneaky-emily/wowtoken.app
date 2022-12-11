@@ -57,12 +57,11 @@ function populateChart() {
             },
             scales: {
                 x: {
-                    type: 'time',
-                    
+                    type: 'time'
                 }
             },
         }
-    })
+    });
 }
 
 
@@ -112,26 +111,26 @@ export function updateTimePreference(newTime) {
         token_chart.destroy();
         current_time_selection = newTime;
     }
-    pullChartData().then(populateChart)
+    pullChartData().then(populateChart);
 }
 
 async function pullChartData() {
     let resp = await fetch("https://data.wowtoken.app/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
     let chart_data = await resp.json();
-    let new_chart_js_data = []
+    let new_chart_js_data = [];
     for (let i = 0; i < chart_data.length; i++) {
         let datum = {
             x: chart_data[i]['time'],
             y: chart_data[i]['value']
-        }
-        new_chart_js_data.push(datum)
+        };
+        new_chart_js_data.push(datum);
     }
-    chart_js_data = new_chart_js_data
+    chart_js_data = new_chart_js_data;
 }
 
 async function updateChartData() {
     token_chart.destroy();
-    pullChartData().then(populateChart)
+    pullChartData().then(populateChart);
 }
 
 function formatToken() {
@@ -151,12 +150,12 @@ function detectURLQuery() {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
-    const allowedTimes = ['72h', '167h', '336h', '720h', '30d', '90d', '1y', '2y', '6m', 'all']
+    const allowedTimes = ['72h', '168h', '336h', '720h', '30d', '90d', '1y', '2y', '6m', 'all'];
     if (urlSearchParams.has('time')) {
         if (allowedTimes.includes(urlSearchParams.get('time').toLowerCase())) {
-            current_time_selection = urlSearchParams.get('time').toLowerCase()
+            current_time_selection = urlSearchParams.get('time').toLowerCase();
         } else {
-            console.log("An incorrect or malformed time selection was made in the query string")
+            console.log("An incorrect or malformed time selection was made in the query string");
         }
     }
 }
