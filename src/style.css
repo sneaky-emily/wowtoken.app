@@ -358,6 +358,7 @@ p {
     align-self: center;
     width: 80px;
     height: 80px;
+    margin-bottom: -80px;
 }
 .lds-ripple div {
     position: absolute;
