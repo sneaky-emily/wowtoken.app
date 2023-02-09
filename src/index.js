@@ -66,7 +66,7 @@ function populateChart() {
 
 
 async function callUpdateURL() {
-    let resp = await fetch("https://data.wowtoken.app/token/current.json");
+    let resp = await fetch("https://data.wowtoken.app/next/token/current.json");
     let data = await resp.json();
     updateTokens(data);
 }
@@ -139,7 +139,7 @@ export function updateTimePreference(newTime) {
 }
 
 async function pullChartData() {
-    let resp = await fetch("https://data.wowtoken.app/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
+    let resp = await fetch("https://data.wowtoken.app/next/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
     let chart_data = await resp.json();
     let new_chart_js_data = [];
     for (let i = 0; i < chart_data.length; i++) {
@@ -153,20 +153,15 @@ async function pullChartData() {
     removeLoader();
 }
 
-async function updateChartData() {
-    token_chart.destroy();
-    pullChartData().then(populateChart);
-}
-
 function formatToken() {
     $("#token").html(current_price_hash[current_region_selection].toLocaleString());
 }
 
 function detectURLQuery() {
     const urlSearchParams = new URLSearchParams(window.location.search)
-    const allowedRegions = ['us', 'eu', 'tw', 'kr']
+    const validRegions = ['us', 'eu', 'tw', 'kr']
     if (urlSearchParams.has('region')) {
-        if (allowedRegions.includes(urlSearchParams.get('region').toLowerCase())) {
+        if (validRegions.includes(urlSearchParams.get('region').toLowerCase())) {
             current_region_selection = urlSearchParams.get('region').toLowerCase()
             let region_ddl = document.getElementById('region')
             for (let i = 0; i < region_ddl.options.length; i++){
@@ -197,7 +192,6 @@ function detectURLQuery() {
     }
 }
 
-
 $(document).ready(function() {
     document.getElementById('region').addEventListener('change', function() {
         updateRegionPreference(this.value);
@@ -208,8 +202,7 @@ $(document).ready(function() {
     });
     current_time_selection = document.getElementById('time').value;
     detectURLQuery();
-    callUpdateURL();
+    Promise.all([callUpdateURL(), pullChartData()]).then(populateChart)
     setInterval(callUpdateURL, 60*1000);
-    pullChartData().then(populateChart);
 });
 
