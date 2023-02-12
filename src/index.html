@@ -20,32 +20,50 @@
                 <canvas id="token-chart"></canvas>
                 <div id="option_select">
                     <p>
-                    <label for="region">Region:</label>
-                    <select name="region" id="region">
-                        <option value="us">US</option>
-                        <option value="eu">EU</option>
-                        <option value="kr">KR</option>
-                        <option value="tw">TW</option>
-                    </select>
+                        <label for="region">Region:</label>
+                        <select name="region" id="region">
+                            <option value="us">US</option>
+                            <option value="eu">EU</option>
+                            <option value="kr">KR</option>
+                            <option value="tw">TW</option>
+                        </select>
                     </p>
                     <p>
-                    <label for="time">Time Selection:</label>
-                    <select name="time" id="time">
-                        <option value="72h">3 Days</option>
-                        <option value="168h">7 Days</option>
-                        <option value="336h">14 Days</option>
-                        <option value="720h">1 Month</option>
-                        <option value="90d">3 Months</option>
-                        <option value="6m">6 Months</option>
-                        <option value="1y">1 Year</option>
-                        <option value="2y">2 Years</option>
-                        <option value="all">All Available</option>
-                    </select>
+                        <label for="time">Time Selection:</label>
+                        <select name="time" id="time">
+                            <option value="72h">3 Days</option>
+                            <option value="168h">7 Days</option>
+                            <option value="336h">14 Days</option>
+                            <option value="720h">1 Month</option>
+                            <option value="90d">3 Months</option>
+                            <option value="6m">6 Months</option>
+                            <option value="1y">1 Year</option>
+                            <option value="2y">2 Years</option>
+                            <option value="all">All Available</option>
+                        </select>
+                    </p>
+                    <p>
                     </p>
                 </div>
+                <details id="about">
+                    <summary>About this Site</summary>
+                    This is a site developed to track the value of the World of Warcraft Token from various
+                    regions over time. I developed it because I wanted a quick and simple way to track the
+                    cost without being advertised to or tracked, and to play around with various "serverless"
+                    technologies. As such, my promise to you is never to use any tracking Javascript, and the
+                    only logging is for debugging purposes of the backend - which does not get IPs.
+                </details>
+                <details id="what-is">
+                    <summary>What is the WoW Token</summary>
+                    The World of Warcraft Token is a first-party system developed by Blizzard to allow you
+                    to either spend currency (local denomination or Blizzard Balance) and convert it to gold
+                    in retail World of Warcraft, or use gold to buy game time or Blizzard Balance. To find out
+                    more, visit the support article on Blizzard's website
+                    <a href="https://us.battle.net/support/en/article/31218">here</a>.
+                </details>
                 <div id="source">
                     <p>
-                        <a href="https://blog.emily.sh/wowtoken-app/">About and Source</a>
+                        <a href="https://blog.emily.sh/wowtoken-app/">Source</a>
                     </p>
                 </div>
             </div>

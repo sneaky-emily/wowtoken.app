@@ -181,7 +181,7 @@ html {
     margin: 1em;
 }
 /*body {
-  
+
 }*/
 code {
     background-color: #073642;
@@ -309,7 +309,7 @@ h6 {
     max-width: 85%;
     border: 1pt solid #586e75;
     padding: 1em;
-}   
+}
 
 .flex-container > div {
     flex: 100%;
@@ -324,6 +324,32 @@ p {
     line-height: 3em;
 }
 
+details {
+    background-color: #073642;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    padding: 0.5em 0.5em 0;
+    font-size: 17px;
+    line-height: 1.5em;
+    margin: .5em 5vw;
+}
+
+details > summary {
+    color: #aaaaaa;
+    cursor: pointer;
+    font-weight: bold;
+    margin: -0.5em -0.5em 0;
+    padding: 0.5em;
+}
+
+details[open] {
+    padding: 0.5em;
+}
+
+details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: 0.5em;
+}
 
 #option_select {
     font-size: 20px;
@@ -351,7 +377,6 @@ p {
     display: flex;
     flex-direction: column;
 }
-
 
 .lds-ripple {
     position: relative;
