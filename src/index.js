@@ -1,11 +1,11 @@
 import {
     Chart,
+    Legend,
+    LinearScale,
+    LineController,
     LineElement,
     PointElement,
-    LineController,
-    LinearScale,
     TimeSeriesScale,
-    Legend,
     Title,
     Tooltip
 } from 'chart.js';
@@ -24,28 +24,29 @@ Chart.register(
     Tooltip
 )
 
-let current_region_selection = ''
-let current_time_selection = ''
-const current_price_hash = {
+let currentRegionSelection = '';
+let currentTimeSelection = '';
+let currentAggregateSelection = '';
+const currentPriceHash = {
     us: 0,
     eu: 0,
     kr: 0,
     tw: 0
-}
-let chart_js_data;
+};
+let chartJsData;
 let ctx;
-let token_chart;
+let tokenChart;
 
 
 function populateChart() {
     ctx = document.getElementById("token-chart").getContext('2d');
-    token_chart = new Chart(ctx, {
+    tokenChart = new Chart(ctx, {
         type: 'line',
         data: { 
             datasets: [{
                 borderColor: 'gold',
-                label: current_region_selection.toUpperCase() + " WoW Token Price",
-                data: chart_js_data,
+                label: currentRegionSelection.toUpperCase() + " WoW Token Price",
+                data: chartJsData,
                 cubicInterpolationMode: 'monotone',
                 pointRadius: 0
             }]
@@ -66,7 +67,7 @@ function populateChart() {
 
 
 async function callUpdateURL() {
-    let resp = await fetch("https://data.wowtoken.app/next/token/current.json");
+    let resp = await fetch("https://data.wowtoken.app/token/current.json");
     let data = await resp.json();
     updateTokens(data);
 }
@@ -79,22 +80,43 @@ function updateTokens(data) {
 }
 
 function updateRegionalToken(region, data) {
-    if (current_price_hash[region] !== data['price_data'][region]) {
-        current_price_hash[region] = data['price_data'][region];
-        if (region === current_region_selection) {
+    if (currentPriceHash[region] !== data['price_data'][region]) {
+        currentPriceHash[region] = data['price_data'][region];
+        if (region === currentRegionSelection) {
             formatToken();
-            add_data_to_chart(region, data);
+            if (currentAggregateSelection === 'none') {
+                addDataToChart(region, data);
+            }
         }
     }
 }
 
-function add_data_to_chart(region, data) {
-    if (token_chart) {
+function addDataToChart(region, data) {
+    if (tokenChart) {
         const datum = {x: data['current_time'], y: data['price_data'][region]}
-        token_chart.data.datasets.forEach((dataset) => {
+        tokenChart.data.datasets.forEach((dataset) => {
             dataset.data.push(datum);
         })
-        token_chart.update();
+        tokenChart.update();
+    }
+}
+
+async function aggregateFunctionToggle() {
+    // TODO: We should probably make these global or something
+    //  so if the need to be updated in the future we can do so easily
+    const smallTimes = ['72h', '168h', '336h'];
+    const longTimes = ['720h', '30d', '2190h', '90d', '1y', '2y', '6m', 'all'];
+    const idsToModify = ['agg_wmax', 'agg_wmin', 'agg_wavg']
+    if (smallTimes.includes(currentTimeSelection)) {
+        for (const id of idsToModify) {
+            let ele = document.getElementById(id);
+            ele.disabled = true;
+        }
+    } else if (longTimes.includes(currentTimeSelection)) {
+        for (const id of idsToModify) {
+            let ele = document.getElementById(id);
+            ele.disabled = false;
+        }
     }
 }
 
@@ -119,42 +141,61 @@ function removeLoader () {
     }
 }
 
-export function updateRegionPreference(newRegion) {
-    if (newRegion !== current_region_selection) {
-        token_chart.destroy();
+function updateRegionPreference(newRegion) {
+    if (newRegion !== currentRegionSelection) {
+        tokenChart.destroy();
         addLoader();
-        current_region_selection = newRegion;
+        currentRegionSelection = newRegion;
     }
     formatToken();
     pullChartData().then(populateChart);
 }
 
-export function updateTimePreference(newTime) {
-    if (newTime !== current_time_selection) {
-        token_chart.destroy();
+function updateTimePreference(newTime) {
+    if (newTime !== currentTimeSelection) {
+        tokenChart.destroy();
         addLoader();
-        current_time_selection = newTime;
+        currentTimeSelection = newTime;
+        aggregateFunctionToggle();
     }
     pullChartData().then(populateChart);
 }
 
-async function pullChartData() {
-    let resp = await fetch("https://data.wowtoken.app/next/token/history/" + current_region_selection + "/" + current_time_selection + ".json");
-    let chart_data = await resp.json();
-    let new_chart_js_data = [];
-    for (let i = 0; i < chart_data.length; i++) {
-        let datum = {
-            x: chart_data[i]['time'],
-            y: chart_data[i]['value']
-        };
-        new_chart_js_data.push(datum);
+function updateAggregatePreference(newAggregate) {
+    if (newAggregate !== currentAggregateSelection) {
+        tokenChart.destroy();
+        addLoader();
+        currentAggregateSelection = newAggregate;
     }
-    chart_js_data = new_chart_js_data;
+    pullChartData().then(populateChart);
+}
+
+function urlBuilder() {
+    let url = "https://data.wowtoken.app/token/history/";
+    if (currentAggregateSelection !== 'none') {
+        url += `${currentAggregateSelection}/`
+    }
+    url += `${currentRegionSelection}/${currentTimeSelection}.json`
+    return url;
+}
+
+async function pullChartData() {
+    let resp = await fetch(urlBuilder());
+    let chartData = await resp.json();
+    let newChartJSData = [];
+    for (let i = 0; i < chartData.length; i++) {
+        let datum = {
+            x: chartData[i]['time'],
+            y: chartData[i]['value']
+        };
+        newChartJSData.push(datum);
+    }
+    chartJsData = newChartJSData;
     removeLoader();
 }
 
 function formatToken() {
-    $("#token").html(current_price_hash[current_region_selection].toLocaleString());
+    $("#token").html(currentPriceHash[currentRegionSelection].toLocaleString());
 }
 
 function detectURLQuery() {
@@ -162,10 +203,10 @@ function detectURLQuery() {
     const validRegions = ['us', 'eu', 'tw', 'kr']
     if (urlSearchParams.has('region')) {
         if (validRegions.includes(urlSearchParams.get('region').toLowerCase())) {
-            current_region_selection = urlSearchParams.get('region').toLowerCase()
+            currentRegionSelection = urlSearchParams.get('region').toLowerCase()
             let region_ddl = document.getElementById('region')
             for (let i = 0; i < region_ddl.options.length; i++){
-                if (region_ddl.options[i].value === current_region_selection) {
+                if (region_ddl.options[i].value === currentRegionSelection) {
                     region_ddl.options[i].selected = true;
                 }
             }
@@ -176,13 +217,13 @@ function detectURLQuery() {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
-    const validTimes = ['72h', '168h', '336h', '720h', '30d', '90d', '1y', '2y', '6m', 'all'];
+    const validTimes = ['72h', '168h', '336h', '720h', '30d', '2190h', '90d', '1y', '2y', '6m', 'all'];
     if (urlSearchParams.has('time')) {
         if (validTimes.includes(urlSearchParams.get('time').toLowerCase())) {
-            current_time_selection = urlSearchParams.get('time').toLowerCase();
-            let time_ddl = document.getElementById('time')
+            currentTimeSelection = urlSearchParams.get('time').toLowerCase();
+            let time_ddl = document.getElementById('time');
             for (let i = 0; i < time_ddl.options.length; i++){
-                if (time_ddl.options[i].value === current_time_selection) {
+                if (time_ddl.options[i].value === currentTimeSelection) {
                     time_ddl.options[i].selected = true;
                 }
             }
@@ -196,11 +237,15 @@ $(document).ready(function() {
     document.getElementById('region').addEventListener('change', function() {
         updateRegionPreference(this.value);
     });
-    current_region_selection = document.getElementById('region').value;
+    currentRegionSelection = document.getElementById('region').value;
     document.getElementById('time').addEventListener('change', function() {
         updateTimePreference(this.value);
     });
-    current_time_selection = document.getElementById('time').value;
+    currentTimeSelection = document.getElementById('time').value;
+    document.getElementById('aggregate').addEventListener('change', function () {
+        updateAggregatePreference(this.value);
+    })
+    currentAggregateSelection = document.getElementById('aggregate').value;
     detectURLQuery();
     Promise.all([callUpdateURL(), pullChartData()]).then(populateChart)
     setInterval(callUpdateURL, 60*1000);
