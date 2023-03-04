@@ -198,38 +198,66 @@ function formatToken() {
     $("#token").html(currentPriceHash[currentRegionSelection].toLocaleString());
 }
 
-function detectURLQuery() {
-    const urlSearchParams = new URLSearchParams(window.location.search)
-    const validRegions = ['us', 'eu', 'tw', 'kr']
-    if (urlSearchParams.has('region')) {
-        if (validRegions.includes(urlSearchParams.get('region').toLowerCase())) {
-            currentRegionSelection = urlSearchParams.get('region').toLowerCase()
-            let region_ddl = document.getElementById('region')
-            for (let i = 0; i < region_ddl.options.length; i++){
-                if (region_ddl.options[i].value === currentRegionSelection) {
-                    region_ddl.options[i].selected = true;
-                }
+// TODO: These maybe able to be collapsed into a single function with params or a lambda
+
+function detectRegionQuery(urlSearchParams) {
+    const validRegions = ['us', 'eu', 'tw', 'kr'];
+    if (validRegions.includes(urlSearchParams.get('region').toLowerCase())) {
+        let regionDDL = document.getElementById('region');
+        for (let i = 0; i < regionDDL.options.length; i++) {
+            if (regionDDL.options[i].value === currentRegionSelection) {
+                regionDDL.options[i].selected = true;
             }
-        } else {
-            console.log("An incorrect or malformed region selection was made in the query string")
         }
+    } else {
+        console.log("An incorrect or malformed region selection was made in the query string");
     }
+}
+
+function detectTimeQuery(urlSearchParams) {
     // In the future, we will allow all the times to be selected,
     // once I come up with a good reduction algorithm.
     // For larger time selections, it's currently hardcoded into the backend
     const validTimes = ['72h', '168h', '336h', '720h', '30d', '2190h', '90d', '1y', '2y', '6m', 'all'];
-    if (urlSearchParams.has('time')) {
-        if (validTimes.includes(urlSearchParams.get('time').toLowerCase())) {
-            currentTimeSelection = urlSearchParams.get('time').toLowerCase();
-            let time_ddl = document.getElementById('time');
-            for (let i = 0; i < time_ddl.options.length; i++){
-                if (time_ddl.options[i].value === currentTimeSelection) {
-                    time_ddl.options[i].selected = true;
-                }
+    if (validTimes.includes(urlSearchParams.get('time').toLowerCase())) {
+        currentTimeSelection = urlSearchParams.get('time').toLowerCase();
+        let timeDDL = document.getElementById('time');
+        for (let i = 0; i < timeDDL.options.length; i++) {
+            if (timeDDL.options[i].value === currentTimeSelection) {
+                timeDDL.options[i].selected = true;
             }
-        } else {
-            console.log("An incorrect or malformed time selection was made in the query string");
         }
+    } else {
+        console.log("An incorrect or malformed time selection was made in the query string");
+    }
+}
+
+function detectAggregateQuery(urlSearchParams) {
+    const validOperations = ['none', 'daily_max', 'daily_min', 'daily_mean', 'weekly_max', 'weekly_min', 'weekly_mean'];
+    if (validOperations.includes(urlSearchParams.get('aggregate').toLowerCase())) {
+        currentAggregateSelection = urlSearchParams.get('aggregate').toLowerCase();
+        let aggregateDDL = document.getElementById('aggregate');
+        for (let i = 0; i < aggregateDDL.options.length; i++) {
+            if (aggregateDDL.options[i].value === currentAggregateSelection) {
+                aggregateDDL.options[i].selected = true;
+            }
+        }
+        aggregateFunctionToggle();
+    } else {
+        console.log("An incorrect or malformed aggregate selection was made in the query string");
+    }
+}
+
+function detectURLQuery() {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    if (urlSearchParams.has('region')) {
+        detectRegionQuery(urlSearchParams);
+    }
+    if (urlSearchParams.has('time')) {
+        detectTimeQuery(urlSearchParams);
+    }
+    if (urlSearchParams.has('aggregate')) {
+        detectAggregateQuery(urlSearchParams);
     }
 }
 
