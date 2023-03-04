@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack && mkdir -p dist && cp src/robots.txt src/index.html src/style.css src/favicon.ico dist/",
+    "build": "webpack --mode production && mkdir -p dist && cp src/robots.txt src/index.html src/style.css src/favicon.ico dist/",
     "build-dev": "webpack --mode development && mkdir -p dist && cp src/robots.txt src/index.html src/style.css src/favicon.ico dist/"
   },
   "devDependencies": {
