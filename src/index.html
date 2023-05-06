@@ -41,6 +41,15 @@
                             <option value="all">All Available</option>
                         </select>
                     </p>
+                    <div class="tooltip">
+                        <button id="copyURLButton">
+                            <span class="tooltiptext" id="urlTooltip">Copy to clipboard</span>
+                            Copy URL to this Chart
+                        </button>
+                    </div>
+                </div>
+                <details id="advanced">
+                    <summary>Advanced Options</summary>
                     <p>
                         <label for="aggregate">Aggregate Function:</label>
                         <select name="aggregate" id="aggregate">
@@ -53,7 +62,8 @@
                             <option id='agg_wavg' value="weekly_mean" disabled>Weekly Average</option>
                         </select>
                     </p>
-                </div>
+                    <em>More coming soon™</em>
+                </details>
                 <details id="about">
                     <summary>About this Site</summary>
                     This is a site developed to track the value of the World of Warcraft Token from various

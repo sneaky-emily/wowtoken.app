@@ -203,6 +203,7 @@ function formatToken() {
 function detectRegionQuery(urlSearchParams) {
     const validRegions = ['us', 'eu', 'tw', 'kr'];
     if (validRegions.includes(urlSearchParams.get('region').toLowerCase())) {
+        currentRegionSelection = urlSearchParams.get('region').toLowerCase();
         let regionDDL = document.getElementById('region');
         for (let i = 0; i < regionDDL.options.length; i++) {
             if (regionDDL.options[i].value === currentRegionSelection) {
@@ -261,6 +262,37 @@ function detectURLQuery() {
     }
 }
 
+function buildDeepLinksURL() {
+    let url = "https://wowtoken.app/?"
+    if (currentTimeSelection !== '72h'){
+        url += `time=${currentTimeSelection}&`
+    }
+    if (currentRegionSelection !== 'us'){
+        url += `region=${currentRegionSelection}&`
+    }
+    if (currentAggregateSelection !== '' && currentAggregateSelection !== 'none'){
+        url += `aggregate=${currentAggregateSelection}`
+    }
+    return url
+}
+
+function copyURL() {
+    let toolTip = document.getElementById('urlTooltip');
+    navigator.clipboard.writeText(buildDeepLinksURL()).then(
+        () => {
+            toolTip.innerHTML= "Copied the URL";
+        },
+        () => {
+            toolTip.innerHTML = "Unable to copy URL to clipboard";
+        }
+    );
+}
+
+function toolTipMouseOut() {
+    let tooltip = document.getElementById("urlTooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+}
+
 $(document).ready(function() {
     document.getElementById('region').addEventListener('change', function() {
         updateRegionPreference(this.value);
@@ -272,6 +304,12 @@ $(document).ready(function() {
     currentTimeSelection = document.getElementById('time').value;
     document.getElementById('aggregate').addEventListener('change', function () {
         updateAggregatePreference(this.value);
+    })
+    document.getElementById('copyURLButton').addEventListener('click', function (event) {
+        copyURL();
+    })
+    document.getElementById('copyURLButton').addEventListener('mouseout', function (event) {
+        toolTipMouseOut();
     })
     currentAggregateSelection = document.getElementById('aggregate').value;
     detectURLQuery();
