@@ -11,7 +11,7 @@ import {
 } from 'chart.js';
 import $ from 'cash-dom';
 import 'chartjs-adapter-dayjs-3';
-
+import "./style.css"
 
 Chart.register(
     LineElement,

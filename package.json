@@ -8,7 +8,9 @@
     "build-dev": "webpack --mode development && mkdir -p dist && cp src/robots.txt src/style.css src/favicon.ico dist/"
   },
   "devDependencies": {
+    "css-loader": "^6.7.4",
     "html-webpack-plugin": "^5.5.1",
+    "mini-css-extract-plugin": "^2.7.6",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.7.2"
   },
@@ -16,6 +18,7 @@
     "cash-dom": "^8.1.5",
     "chart.js": "^4.3.0",
     "chartjs-adapter-dayjs-3": "^1.2.3",
+    "css-minimizer-webpack-plugin": "^5.0.0",
     "dayjs": "^1.11.7"
   }
 }
