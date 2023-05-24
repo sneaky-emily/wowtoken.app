@@ -4,15 +4,15 @@
         <title>WoW Historical Token Prices Tracker</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Track current and historical gold price trends for the World of Warcraft (WoW) in game token, including the US, EU, TW, and KR regions. Prices updated every minute. Simple, quick, and easy info, no ads or tracking, ever.">
+        <meta name="description" content="Track current and historical gold price trends for the World of Warcraft (WoW) Classic in game token, including the US, EU, TW, and KR regions. Prices updated every minute. Simple, quick, and easy info, no ads or tracking, ever.">
         <link rel="preconnect" href="https://data.wowtoken.app">
 	    <link rel="dns-prefetch" href="https://data.wowtoken.app">
-        <link rel="preload" href="https://data.wowtoken.app/token/current.json" as="fetch" type="application/json" crossorigin="anonymous">
-        <link rel="preload" href="https://data.wowtoken.app/token/history/us/72h.json" as="fetch" type="application/json" crossorigin="anonymous">
+        <link rel="preload" href="https://data.wowtoken.app/classic/token/current.json" as="fetch" type="application/json" crossorigin="anonymous">
+        <link rel="preload" href="https://data.wowtoken.app/classic/token/history/us/72h.json" as="fetch" type="application/json" crossorigin="anonymous">
     </head>
     <body>
         <div class="flex-container">
-            <div><h1>1 Token = <u id="token">0</u> Gold</h1></div>
+            <div><h1>1 Classic Token = <u id="token">0</u> Gold</h1></div>
             <div id="chart-frame">
                 <div class="lds-ripple" id="loader"><div></div><div></div></div>
                 <canvas id="token-chart"></canvas>
@@ -31,12 +31,12 @@
                         <select name="time" id="time">
                             <option value="72h">3 Days</option>
                             <option value="168h">7 Days</option>
-                            <option value="336h">14 Days</option>
-                            <option value="720h">1 Month</option>
-                            <option value="90d">3 Months</option>
-                            <option value="6m">6 Months</option>
-                            <option value="1y">1 Year</option>
-                            <option value="2y">2 Years</option>
+                            <option value="336h" disabled>14 Days</option>
+                            <option value="720h" disabled>1 Month</option>
+                            <option value="90d" disabled>3 Months</option>
+                            <option value="6m" disabled>6 Months</option>
+                            <option value="1y" disabled>1 Year</option>
+                            <option value="2y" disabled>2 Years</option>
                             <option value="all">All Available</option>
                         </select>
                     </p>
@@ -45,6 +45,9 @@
                             <span class="tooltiptext" id="urlTooltip">Copy to clipboard</span>
                             Copy URL to this Chart
                         </button>
+                    </div>
+                    <div>
+                        <p><em>Looking for the retail WoW Token price? Find it <a href="https://wowtoken.app">here!</a></em></p>
                     </div>
                 </div>
                 <details id="advanced">
@@ -75,8 +78,8 @@
                     <summary>What is the WoW Token</summary>
                     The World of Warcraft Token is a first-party system developed by Blizzard to allow you
                     to either spend currency (local denomination or Blizzard Balance) and convert it to gold
-                    in retail World of Warcraft, or use gold to buy game time or Blizzard Balance. To find out
-                    more, visit the support article on Blizzard's website
+                    in retail and classic World of Warcraft, or use gold to buy game time.
+                    To find out more, visit the support article on Blizzard's website
                     <a href="https://us.battle.net/support/en/article/31218">here</a>.
                 </details>
                 <div id="source">

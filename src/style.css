@@ -176,8 +176,8 @@ h6 {
     font-weight: 700;
 }
 html {
-    background-color: #073642;
-    color: #839496;
+    background-color: #6b4233;
+    color: #b7b7b7;
     margin: 1em;
 }
 /*body {
@@ -197,7 +197,7 @@ a:hover {
     color: #cb4b16;
 }
 h1 {
-    color: #d33682;
+    color: #ffd5e9;
 }
 h2,
 h3,
@@ -209,7 +209,7 @@ h6 {
 pre {
     background-color: #002b36;
     color: #839496;
-    border: 1pt solid #586e75;
+    border: 1pt solid #000000;
     padding: 1em;
     box-shadow: 5pt 5pt 8pt #073642;
 }
@@ -304,10 +304,10 @@ h6 {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #002b36;
+    background-color: #2f201e;
     margin: 0 auto;
     max-width: 85%;
-    border: 1pt solid #586e75;
+    border: 1pt solid #000000;
     padding: 1em;
 }
 
@@ -325,8 +325,8 @@ p {
 }
 
 details {
-    background-color: #073642;
-    border: 1px solid #aaa;
+    background-color: #6b4233;
+    border: 1px solid #000000;
     border-radius: 4px;
     padding: 0.5em 0.5em 0;
     font-size: 17px;
@@ -347,7 +347,7 @@ details[open] {
 }
 
 details[open] summary {
-    border-bottom: 1px solid #aaa;
+    border-bottom: 1px solid #000000;
     margin-bottom: 0.5em;
 }
 

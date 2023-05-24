@@ -45,7 +45,7 @@ function populateChart() {
         data: { 
             datasets: [{
                 borderColor: 'gold',
-                label: currentRegionSelection.toUpperCase() + " WoW Token Price",
+                label: currentRegionSelection.toUpperCase() + " WoW Classic Token Price",
                 data: chartJsData,
                 cubicInterpolationMode: 'monotone',
                 pointRadius: 0
@@ -67,7 +67,7 @@ function populateChart() {
 
 
 async function callUpdateURL() {
-    let resp = await fetch("https://data.wowtoken.app/token/current.json");
+    let resp = await fetch("https://data.wowtoken.app/classic/token/current.json");
     let data = await resp.json();
     updateTokens(data);
 }
@@ -171,7 +171,7 @@ function updateAggregatePreference(newAggregate) {
 }
 
 function urlBuilder() {
-    let url = "https://data.wowtoken.app/token/history/";
+    let url = "https://data.wowtoken.app/classic/token/history/";
     if (currentAggregateSelection !== 'none') {
         url += `${currentAggregateSelection}/`
     }
@@ -263,7 +263,7 @@ function detectURLQuery() {
 }
 
 function buildDeepLinksURL() {
-    let url = "https://wowtoken.app/?"
+    let url = "https://classic.wowtoken.app/?"
     if (currentTimeSelection !== '72h'){
         url += `time=${currentTimeSelection}&`
     }
