@@ -9,7 +9,6 @@ import {
     Title,
     Tooltip
 } from 'chart.js';
-import $ from 'cash-dom';
 import 'chartjs-adapter-dayjs-3';
 import "./style.css"
 
@@ -195,7 +194,7 @@ async function pullChartData() {
 }
 
 function formatToken() {
-    $("#token").html(currentPriceHash[currentRegionSelection].toLocaleString());
+    document.getElementById("token").innerText = currentPriceHash[currentRegionSelection].toLocaleString();
 }
 
 // TODO: These maybe able to be collapsed into a single function with params or a lambda
@@ -293,7 +292,21 @@ function toolTipMouseOut() {
     tooltip.innerHTML = "Copy to clipboard";
 }
 
-$(document).ready(function() {
+function registerEventHandles() {
+    registerCopyHandlers();
+    registerOptionHandlers();
+}
+
+function registerCopyHandlers() {
+    document.getElementById('copyURLButton').addEventListener('click', function (event) {
+        copyURL();
+    })
+    document.getElementById('copyURLButton').addEventListener('mouseout', function (event) {
+        toolTipMouseOut();
+    })
+}
+
+function registerOptionHandlers() {
     document.getElementById('region').addEventListener('change', function() {
         updateRegionPreference(this.value);
     });
@@ -305,15 +318,13 @@ $(document).ready(function() {
     document.getElementById('aggregate').addEventListener('change', function () {
         updateAggregatePreference(this.value);
     })
-    document.getElementById('copyURLButton').addEventListener('click', function (event) {
-        copyURL();
-    })
-    document.getElementById('copyURLButton').addEventListener('mouseout', function (event) {
-        toolTipMouseOut();
-    })
     currentAggregateSelection = document.getElementById('aggregate').value;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    registerEventHandles();
     detectURLQuery();
     Promise.all([callUpdateURL(), pullChartData()]).then(populateChart)
     setInterval(callUpdateURL, 60*1000);
-});
+}, false);
 
