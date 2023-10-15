@@ -17,29 +17,63 @@
                 <div class="lds-ripple" id="loader"><div></div><div></div></div>
                 <canvas id="token-chart"></canvas>
                 <div id="option_select">
-                    <p>
-                        <label for="region">Region:</label>
-                        <select name="region" id="region">
-                            <option value="us">US</option>
-                            <option value="eu">EU</option>
-                            <option value="kr">KR</option>
-                            <option value="tw">TW</option>
-                        </select>
-                    </p>
-                    <p>
-                        <label for="time">Time Selection:</label>
-                        <select name="time" id="time">
-                            <option value="72h">3 Days</option>
-                            <option value="168h">7 Days</option>
-                            <option value="336h">14 Days</option>
-                            <option value="720h">1 Month</option>
-                            <option value="90d">3 Months</option>
-                            <option value="6m">6 Months</option>
-                            <option value="1y">1 Year</option>
-                            <option value="2y">2 Years</option>
-                            <option value="all">All Available</option>
-                        </select>
-                    </p>
+                    <fieldset id="basic-options">
+                        <legend>Basic chart options</legend>
+                        <div>
+                            <label for="region">Region:</label>
+                            <select name="region" id="region">
+                                <option value="us">US</option>
+                                <option value="eu">EU</option>
+                                <option value="kr">KR</option>
+                                <option value="tw">TW</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="time">Time Selection:</label>
+                            <select name="time" id="time">
+                                <option value="72h">3 Days</option>
+                                <option value="168h">7 Days</option>
+                                <option value="336h">14 Days</option>
+                                <option value="720h">1 Month</option>
+                                <option value="90d">3 Months</option>
+                                <option value="6m">6 Months</option>
+                                <option value="1y">1 Year</option>
+                                <option value="2y">2 Years</option>
+                                <option value="all">All Available</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="enable-advanced">Enable advanced charting options:</label>
+                            <input type="checkbox" id="enable-advanced" name="enable-advanced" />
+                        </div>
+                    </fieldset>
+                    <fieldset id="advanced-options">
+                        <legend>Advanced chart options</legend>
+                        <fieldset id="advanced-region-options">
+                            <legend>Multi-Region Selection</legend>
+                            <label for="adv-r-us">US:</label>
+                            <input type="checkbox" id="adv-r-us" name="adv-r-us" value="enable" disabled />
+                            <label for="adv-r-eu">EU:</label>
+                            <input type="checkbox" id="adv-r-eu" name="adv-r-eu" value="enable" disabled />
+                            <label for="adv-r-kr">KR:</label>
+                            <input type="checkbox" id="adv-r-kr" name="adv-r-kr" value="enable" disabled />
+                            <label for="adv-r-tw">TW:</label>
+                            <input type="checkbox" id="adv-r-tw" name="adv-r-tw" value="enable" disabled/>
+                        </fieldset>
+                        <fieldset id="basic-smoothing">
+                            <label for="aggregate">Smoothing Function:</label>
+                            <select name="aggregate" id="aggregate">
+                                <option id='agg_none' value="none">None</option>
+                                <option id='agg_davg' value="daily_mean">Daily Average</option>
+                                <option id='agg_wavg' value="weekly_mean" disabled>Weekly Average</option>
+                            </select>
+                        </fieldset>
+                        <fieldset id="y-start-options">
+                            <label for="y-start">Start y-axis at 0:</label>
+                            <input type="checkbox" id="y-start" name="y-start" value="enable" disabled/>
+                        </fieldset>
+
+                    </fieldset>
                     <div class="tooltip">
                         <button id="copyURLButton">
                             <span class="tooltiptext" id="urlTooltip">Copy to clipboard</span>
@@ -50,22 +84,6 @@
                         <p><em>Looking for the classic WoW Token price? Find it <a href="https://classic.wowtoken.app">here!</a></em></p>
                     </div>
                 </div>
-                <details id="advanced">
-                    <summary>Advanced Options</summary>
-                    <p>
-                        <label for="aggregate">Aggregate Function:</label>
-                        <select name="aggregate" id="aggregate">
-                            <option id='agg_none' value="none">None</option>
-                            <option id='agg_dmax' value="daily_max">Daily Maximum</option>
-                            <option id='agg_dmin' value="daily_min">Daily Minimum</option>
-                            <option id='agg_davg' value="daily_mean">Daily Average</option>
-                            <option id='agg_wmax' value="weekly_max" disabled>Weekly Maximum</option>
-                            <option id='agg_wmin' value="weekly_min" disabled>Weekly Minimum</option>
-                            <option id='agg_wavg' value="weekly_mean" disabled>Weekly Average</option>
-                        </select>
-                    </p>
-                    <em>More coming soon™</em>
-                </details>
                 <details id="about">
                     <summary>About this Site</summary>
                     This is a site developed to track the value of the World of Warcraft Token from various
