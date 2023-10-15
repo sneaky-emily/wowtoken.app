@@ -12,6 +12,8 @@ import {
 import 'chartjs-adapter-dayjs-3';
 import "./style.css"
 
+// TODO: This file should be seperated into multiple with better ownership
+
 Chart.register(
     LineElement,
     PointElement,
@@ -32,6 +34,26 @@ const currentPriceHash = {
     kr: 0,
     tw: 0
 };
+let chartData = {
+    us: [],
+    eu: [],
+    kr: [],
+    tw: []
+}
+let chartOptions = {
+    us: {
+        color: 'gold'
+    },
+    eu: {
+        color: 'red'
+    },
+    kr: {
+        color: 'white'
+    },
+    tw: {
+        color: 'pink'
+    }
+}
 let chartJsData;
 let ctx;
 let tokenChart;
@@ -105,7 +127,7 @@ async function aggregateFunctionToggle() {
     //  so if the need to be updated in the future we can do so easily
     const smallTimes = ['72h', '168h', '336h'];
     const longTimes = ['720h', '30d', '2190h', '90d', '1y', '2y', '6m', 'all'];
-    const idsToModify = ['agg_wmax', 'agg_wmin', 'agg_wavg']
+    const idsToModify = ['agg_wavg']
     if (smallTimes.includes(currentTimeSelection)) {
         for (const id of idsToModify) {
             let ele = document.getElementById(id);
@@ -167,6 +189,18 @@ function updateAggregatePreference(newAggregate) {
         currentAggregateSelection = newAggregate;
     }
     pullChartData().then(populateChart);
+}
+
+function toggleAdvancedSetting() {
+    let element = document.getElementById('advanced-options')
+    if (document.getElementById('enable-advanced').checked)
+    {
+        element.style.display = 'flex';
+    }
+    else
+    {
+        element.style.display = 'none';
+    }
 }
 
 function urlBuilder() {
@@ -233,7 +267,7 @@ function detectTimeQuery(urlSearchParams) {
 }
 
 function detectAggregateQuery(urlSearchParams) {
-    const validOperations = ['none', 'daily_max', 'daily_min', 'daily_mean', 'weekly_max', 'weekly_min', 'weekly_mean'];
+    const validOperations = ['none', 'daily_mean', 'weekly_mean'];
     if (validOperations.includes(urlSearchParams.get('aggregate').toLowerCase())) {
         currentAggregateSelection = urlSearchParams.get('aggregate').toLowerCase();
         let aggregateDDL = document.getElementById('aggregate');
@@ -295,13 +329,20 @@ function toolTipMouseOut() {
 function registerEventHandles() {
     registerCopyHandlers();
     registerOptionHandlers();
+    registerAdvancedHandlers();
+}
+
+function registerAdvancedHandlers() {
+    document.getElementById('enable-advanced').addEventListener('change', () => {
+        toggleAdvancedSetting();
+    })
 }
 
 function registerCopyHandlers() {
-    document.getElementById('copyURLButton').addEventListener('click', function (event) {
+    document.getElementById('copyURLButton').addEventListener('click', function () {
         copyURL();
     })
-    document.getElementById('copyURLButton').addEventListener('mouseout', function (event) {
+    document.getElementById('copyURLButton').addEventListener('mouseout', function () {
         toolTipMouseOut();
     })
 }

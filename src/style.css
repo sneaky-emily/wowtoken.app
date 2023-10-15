@@ -137,9 +137,6 @@ input[type="radio"] {
     padding: 0;
 }
 input[type="search"] {
-    -webkit-appearance: textfield;
-    -moz-box-sizing: content-box;
-    -webkit-box-sizing: content-box;
     box-sizing: content-box;
 }
 input[type="search"]::-webkit-search-cancel-button,
@@ -318,9 +315,28 @@ h6 {
     line-height: 75px;
     font-size: 30px;
 }
+.adv-options-container {
+    display: flex;
+    padding: 20px;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-around;
+}
+.box > div {
+    border: solid #bfbdbf;
+    border-radius: 40px;
+    padding: 20px;
+    margin: 20px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
 p {
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     line-height: 3em;
 }
 
@@ -353,6 +369,20 @@ details[open] summary {
 
 #option_select {
     font-size: 20px;
+    line-height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
+#option_select > div {
+    padding: 10px;
+}
+
+#option_select > fieldset {
+    padding-bottom: 20px;
+    max-width: fit-content;
 }
 
 #token {
@@ -376,6 +406,17 @@ details[open] summary {
 #chart-frame {
     display: flex;
     flex-direction: column;
+}
+
+#advanced-options {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+}
+
+#advanced-options > fieldset {
+    margin: 10px;
 }
 
 .lds-ripple {
@@ -456,8 +497,8 @@ details[open] summary {
         opacity: 1;
     }
     100% {
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         width: 72px;
         height: 72px;
         opacity: 0;
