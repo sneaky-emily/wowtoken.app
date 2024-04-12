@@ -258,7 +258,7 @@ function detectRegionQuery(urlSearchParams) {
             }
         }
     } else {
-        console.log("An incorrect or malformed region selection was made in the query string");
+        console.warn("An incorrect or malformed region selection was made in the query string");
     }
 }
 
@@ -276,7 +276,7 @@ function detectTimeQuery(urlSearchParams) {
             }
         }
     } else {
-        console.log("An incorrect or malformed time selection was made in the query string");
+        console.warn("An incorrect or malformed time selection was made in the query string");
     }
 }
 
@@ -292,7 +292,7 @@ function detectAggregateQuery(urlSearchParams) {
         }
         aggregateFunctionToggle();
     } else {
-        console.log("An incorrect or malformed aggregate selection was made in the query string");
+        console.warn("An incorrect or malformed aggregate selection was made in the query string");
     }
 }
 
