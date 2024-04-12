@@ -109,7 +109,7 @@ function lookupTimeUnit(query){
         'd': 'week',
         'm': 'month',
         'y': 'month',
-        'l': 'year'
+        'l': 'month'
     }
     return lookup[query.charAt(query.length - 1)]
 }
