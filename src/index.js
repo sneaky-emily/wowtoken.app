@@ -79,7 +79,21 @@ function populateChart() {
             },
             scales: {
                 x: {
-                    type: 'time'
+                    type: 'time',
+                    ticks: {
+                        color: '#a7a4ab',
+                        font: {
+                            size: 18,
+                        }
+                    },
+                },
+                y: {
+                    ticks: {
+                        color: '#a7a4ab',
+                        font: {
+                            size: 18,
+                        }
+                    }
                 }
             },
         }
