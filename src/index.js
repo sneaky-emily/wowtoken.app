@@ -86,6 +86,9 @@ function populateChart() {
                             size: 18,
                         }
                     },
+                    time: {
+                        unit: lookupTimeUnit(currentTimeSelection)
+                    }
                 },
                 y: {
                     ticks: {
@@ -98,6 +101,17 @@ function populateChart() {
             },
         }
     });
+}
+
+function lookupTimeUnit(query){
+    const lookup = {
+        'h': 'day',
+        'd': 'week',
+        'm': 'month',
+        'y': 'month',
+        'l': 'year'
+    }
+    return lookup[query.charAt(query.length - 1)]
 }
 
 
