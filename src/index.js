@@ -28,6 +28,7 @@ Chart.register(
 let currentRegionSelection = '';
 let currentTimeSelection = '';
 let currentAggregateSelection = '';
+let startYAtZero = false;
 const currentPriceHash = {
     us: 0,
     eu: 0,
@@ -91,6 +92,7 @@ function populateChart() {
                     }
                 },
                 y: {
+                    beginAtZero: startYAtZero,
                     ticks: {
                         color: '#a7a4ab',
                         font: {
@@ -231,6 +233,14 @@ function toggleAdvancedSetting() {
     }
 }
 
+function toggleStartYAtZero(){
+    startYAtZero = document.getElementById('y-start').checked;
+    if (tokenChart){
+        tokenChart.options.scales.y.beginAtZero = startYAtZero;
+        tokenChart.update();
+    }
+}
+
 function urlBuilder() {
     let url = "https://data.wowtoken.app/token/history/";
     if (currentAggregateSelection !== 'none') {
@@ -310,6 +320,16 @@ function detectAggregateQuery(urlSearchParams) {
     }
 }
 
+function detectZeroQuery(urlSearchParams) {
+    startYAtZero = urlSearchParams.get('startAtZero') === 'true';
+    let advOptions = document.getElementById('enable-advanced');
+    let startAtZeroOption = document.getElementById('y-start');
+    advOptions.checked = startYAtZero;
+    startAtZeroOption.checked = startYAtZero;
+    toggleAdvancedSetting();
+    toggleStartYAtZero();
+}
+
 function detectURLQuery() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     if (urlSearchParams.has('region')) {
@@ -320,6 +340,9 @@ function detectURLQuery() {
     }
     if (urlSearchParams.has('aggregate')) {
         detectAggregateQuery(urlSearchParams);
+    }
+    if (urlSearchParams.has('startAtZero')) {
+        detectZeroQuery(urlSearchParams)
     }
 }
 
@@ -332,7 +355,10 @@ function buildDeepLinksURL() {
         url += `region=${currentRegionSelection}&`
     }
     if (currentAggregateSelection !== '' && currentAggregateSelection !== 'none'){
-        url += `aggregate=${currentAggregateSelection}`
+        url += `aggregate=${currentAggregateSelection}&`
+    }
+    if (startYAtZero !== false){
+        url += `startAtZero=${startYAtZero}&`
     }
     return url
 }
@@ -363,6 +389,9 @@ function registerEventHandles() {
 function registerAdvancedHandlers() {
     document.getElementById('enable-advanced').addEventListener('change', () => {
         toggleAdvancedSetting();
+    })
+    document.getElementById('y-start').addEventListener('change', () => {
+        toggleStartYAtZero();
     })
 }
 
