@@ -81,6 +81,9 @@ function populateChart() {
             scales: {
                 x: {
                     type: 'time',
+                    grid: {
+                        color: '#625f62',
+                    },
                     ticks: {
                         color: '#a7a4ab',
                         font: {
@@ -93,6 +96,9 @@ function populateChart() {
                 },
                 y: {
                     beginAtZero: startYAtZero,
+                    grid: {
+                        color: '#2f2c2f',
+                    },
                     ticks: {
                         color: '#a7a4ab',
                         font: {
