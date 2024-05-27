@@ -29,7 +29,6 @@ let currentRegionSelection = '';
 let currentTimeSelection = '';
 let currentAggregateSelection = '';
 let startYAtZero = false;
-let firstLoad = true;
 const currentPriceHash = {
     us: 0,
     eu: 0,
@@ -125,13 +124,7 @@ function lookupTimeUnit(query){
 
 
 async function callUpdateURL() {
-    let url = "https://data.wowtoken.app/token/current.json"
-    if (firstLoad) {
-        url = `${url}?kv-response=true`;
-        firstLoad = false;
-    }
-
-    let resp = await fetch(url);
+    let resp = await fetch("https://data.wowtoken.app/token/current.json");
     let data = await resp.json();
     updateTokens(data);
 }
