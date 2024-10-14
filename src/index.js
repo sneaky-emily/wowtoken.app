@@ -48,86 +48,6 @@ const chartData = {
     kr: [],
     tw: []
 }
-let chartOptions = {
-    us: {
-        color: 'gold'
-    },
-    eu: {
-        color: 'red'
-    },
-    kr: {
-        color: 'white'
-    },
-    tw: {
-        color: 'pink'
-    }
-}
-let chartJsData;
-let ctx;
-let tokenChart;
-
-
-function populateChart() {
-    ctx = document.getElementById("token-chart").getContext('2d');
-    tokenChart = new Chart(ctx, {
-        type: 'line',
-        data: { 
-            datasets: [{
-                borderColor: 'gold',
-                label: currentRegionSelection.toUpperCase() + " WoW Token Price",
-                data: [],
-                cubicInterpolationMode: 'monotone',
-                pointRadius: 0
-            }]
-        },
-        options: {
-            interaction: {
-                intersect: false,
-                mode: "index"
-            },
-            scales: {
-                x: {
-                    type: 'time',
-                    grid: {
-                        color: '#625f62',
-                    },
-                    ticks: {
-                        color: '#a7a4ab',
-                        font: {
-                            size: 18,
-                        }
-                    },
-                    time: {
-                        unit: lookupTimeUnit(currentTimeSelection)
-                    }
-                },
-                y: {
-                    beginAtZero: startYAtZero,
-                    grid: {
-                        color: '#2f2c2f',
-                    },
-                    ticks: {
-                        color: '#a7a4ab',
-                        font: {
-                            size: 18,
-                        }
-                    }
-                }
-            },
-        }
-    });
-}
-
-function lookupTimeUnit(query){
-    const lookup = {
-        'h': 'day',
-        'd': 'week',
-        'm': 'month',
-        'y': 'month',
-        'l': 'year'
-    }
-    return lookup[query.charAt(query.length - 1)]
-}
 
 async function callUpdateURL() {
     await updateTokens(await fetchCurrent());
@@ -147,7 +67,7 @@ async function updateRegionalToken(region, data) {
         currentPriceHash[region] = data['price_data'][region];
         if (region === currentRegionSelection) {
             formatToken();
-            const datum = new Datum(data['current_time'], data['price']);
+            const datum = new Datum(Date.parse(data['current_time']), data['price_data'][region]);
             if (currentAggregateSelection === 'none' && chart.active()) {
                 await chart.addDataToChart(datum);
             }
