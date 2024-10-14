@@ -12,6 +12,12 @@ import {
 import 'chartjs-adapter-dayjs-3';
 import "./style.css"
 
+import fetchCurrent from "./fetchCurrent";
+import fetchData from "./fetchData";
+import {addLoader, removeLoader} from "./loader";
+import TokenChart from "./tokenChart";
+import Datum from "./datum";
+
 // TODO: This file should be seperated into multiple with better ownership
 
 Chart.register(
@@ -29,13 +35,14 @@ let currentRegionSelection = '';
 let currentTimeSelection = '';
 let currentAggregateSelection = '';
 let startYAtZero = false;
+let chart;
 const currentPriceHash = {
     us: 0,
     eu: 0,
     kr: 0,
     tw: 0
 };
-let chartData = {
+const chartData = {
     us: [],
     eu: [],
     kr: [],
@@ -68,7 +75,7 @@ function populateChart() {
             datasets: [{
                 borderColor: 'gold',
                 label: currentRegionSelection.toUpperCase() + " WoW Token Price",
-                data: chartJsData,
+                data: [],
                 cubicInterpolationMode: 'monotone',
                 pointRadius: 0
             }]
@@ -122,39 +129,32 @@ function lookupTimeUnit(query){
     return lookup[query.charAt(query.length - 1)]
 }
 
-
 async function callUpdateURL() {
-    let resp = await fetch("https://data.wowtoken.app/token/current.json");
-    let data = await resp.json();
-    updateTokens(data);
+    await updateTokens(await fetchCurrent());
 }
 
-function updateTokens(data) {
-    updateRegionalToken('us', data);
-    updateRegionalToken('eu', data);
-    updateRegionalToken('kr', data);
-    updateRegionalToken('tw', data);
+async function updateTokens(data) {
+    await Promise.all([
+        updateRegionalToken('us', data),
+        updateRegionalToken('eu', data),
+        updateRegionalToken('kr', data),
+        updateRegionalToken('tw', data)
+    ]);
 }
 
-function updateRegionalToken(region, data) {
+async function updateRegionalToken(region, data) {
     if (currentPriceHash[region] !== data['price_data'][region]) {
         currentPriceHash[region] = data['price_data'][region];
         if (region === currentRegionSelection) {
             formatToken();
-            if (currentAggregateSelection === 'none') {
-                addDataToChart(region, data);
+            const datum = new Datum(data['current_time'], data['price']);
+            if (currentAggregateSelection === 'none' && chart.active()) {
+                await chart.addDataToChart(datum);
+            }
+            else if (currentAggregateSelection === 'none' && !chart.active()) {
+                await chart.lateUpdate(datum);
             }
         }
-    }
-}
-
-function addDataToChart(region, data) {
-    if (tokenChart) {
-        const datum = {x: data['current_time'], y: data['price_data'][region]}
-        tokenChart.data.datasets.forEach((dataset) => {
-            dataset.data.push(datum);
-        })
-        tokenChart.update();
     }
 }
 
@@ -177,54 +177,33 @@ async function aggregateFunctionToggle() {
     }
 }
 
-function addLoader() {
-    let loader = document.getElementById('loader');
-    if (!loader) {
-        const blank_div = document.createElement('div');
-        let loaderNode = blank_div.cloneNode();
-        loaderNode.id = 'loader';
-        loaderNode.className = 'lds-ripple';
-        loaderNode.appendChild(blank_div.cloneNode());
-        loaderNode.appendChild(blank_div.cloneNode());
-        let chartNode = document.getElementById('token-chart');
-        chartNode.before(loaderNode);
-    }
-}
-
-function removeLoader () {
-    let loader = document.getElementById('loader');
-    if (loader) {
-        loader.remove();
-    }
-}
-
-function updateRegionPreference(newRegion) {
+async function updateRegionPreference(newRegion) {
     if (newRegion !== currentRegionSelection) {
-        tokenChart.destroy();
+        await chart.destroyChart();
         addLoader();
         currentRegionSelection = newRegion;
     }
     formatToken();
-    pullChartData().then(populateChart);
+    await pullChartData();
 }
 
-function updateTimePreference(newTime) {
+async function updateTimePreference(newTime) {
     if (newTime !== currentTimeSelection) {
-        tokenChart.destroy();
+        await chart.destroyChart();
         addLoader();
         currentTimeSelection = newTime;
-        aggregateFunctionToggle();
+        await aggregateFunctionToggle();
     }
-    pullChartData().then(populateChart);
+    await pullChartData();
 }
 
-function updateAggregatePreference(newAggregate) {
+async function updateAggregatePreference(newAggregate) {
     if (newAggregate !== currentAggregateSelection) {
-        tokenChart.destroy();
+        await chart.destroyChart();
         addLoader();
         currentAggregateSelection = newAggregate;
     }
-    pullChartData().then(populateChart);
+    await pullChartData();
 }
 
 function toggleAdvancedSetting() {
@@ -241,33 +220,19 @@ function toggleAdvancedSetting() {
 
 function toggleStartYAtZero(){
     startYAtZero = document.getElementById('y-start').checked;
-    if (tokenChart){
-        tokenChart.options.scales.y.beginAtZero = startYAtZero;
-        tokenChart.update();
-    }
-}
-
-function urlBuilder() {
-    let url = "https://data.wowtoken.app/token/history/";
-    if (currentAggregateSelection !== 'none') {
-        url += `${currentAggregateSelection}/`
-    }
-    url += `${currentRegionSelection}/${currentTimeSelection}.json`
-    return url;
+    chart.toggleYStart(startYAtZero);
 }
 
 async function pullChartData() {
-    let resp = await fetch(urlBuilder());
-    let chartData = await resp.json();
-    let newChartJSData = [];
-    for (let i = 0; i < chartData.length; i++) {
-        let datum = {
-            x: chartData[i]['time'],
-            y: chartData[i]['value']
-        };
-        newChartJSData.push(datum);
+    chartData[currentRegionSelection] = await fetchData(currentRegionSelection, currentTimeSelection, currentAggregateSelection);
+    if (!chart.active()) {
+        await chart.createChart(currentRegionSelection, currentTimeSelection, startYAtZero, chartData[currentRegionSelection]);
     }
-    chartJsData = newChartJSData;
+    else {
+        for (let i = 0; i < chartData[currentRegionSelection].length; i++) {
+            await chart.addDataToChart(chartData[currentRegionSelection][i]);
+        }
+    }
     removeLoader();
 }
 
@@ -428,7 +393,11 @@ function registerOptionHandlers() {
 document.addEventListener('DOMContentLoaded', function () {
     registerEventHandles();
     detectURLQuery();
-    Promise.all([callUpdateURL(), pullChartData()]).then(populateChart)
+    chart = new TokenChart();
+    Promise.all([
+        callUpdateURL(),
+    ]).then(pullChartData);
+
     setInterval(callUpdateURL, 60*1000);
 }, false);
 
