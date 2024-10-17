@@ -12,7 +12,13 @@
     </head>
     <body>
         <div class="flex-container">
-            <div><h1>1 Classic Token = <u id="token">0</u> Gold</h1></div>
+            <div class="data-header">
+                <h1>1 Classic Token = <u id="token">0</u> Gold</h1>
+                <div class="high-low">
+                    <p>Highest in last <em id="high-time">3 days</em>: <u id="high-val">0</u></p>
+                    <p>Lowest in last <em id="low-time">3 days</em>: <u id="low-val">0</u></p>
+                </div>
+            </div>
             <div id="chart-frame">
                 <div class="lds-ripple" id="loader"><div></div><div></div></div>
                 <canvas id="token-chart"></canvas>
@@ -51,7 +57,6 @@
                             <select name="aggregate" id="aggregate">
                                 <option id='agg_none' value="none">None</option>
                                 <option id='agg_davg' value="daily_mean">Daily Average</option>
-                                <option id='agg_wavg' value="weekly_mean" disabled>Weekly Average</option>
                             </select>
                         </fieldset>
                         <fieldset id="y-start-options">

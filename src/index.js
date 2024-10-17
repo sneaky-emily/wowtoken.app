@@ -14,22 +14,13 @@ import "./style.css"
 
 import fetchCurrent from "./fetchCurrent";
 import fetchData from "./fetchData";
+import {updateHighTime} from "./highTime";
+import {updateLowTime} from "./lowTime";
 import {addLoader, removeLoader} from "./loader";
 import TokenChart from "./tokenChart";
 import Datum from "./datum";
 
 // TODO: This file should be seperated into multiple with better ownership
-
-Chart.register(
-    LineElement,
-    PointElement,
-    LineController,
-    LinearScale,
-    TimeSeriesScale,
-    Legend,
-    Title,
-    Tooltip
-)
 
 let currentRegionSelection = '';
 let currentTimeSelection = '';
@@ -104,6 +95,7 @@ async function updateRegionPreference(newRegion) {
         currentRegionSelection = newRegion;
     }
     formatToken();
+    chart = new TokenChart();
     await pullChartData();
 }
 
@@ -114,7 +106,10 @@ async function updateTimePreference(newTime) {
         currentTimeSelection = newTime;
         await aggregateFunctionToggle();
     }
+    chart = new TokenChart();
     await pullChartData();
+    updateHighTime();
+    updateLowTime();
 }
 
 async function updateAggregatePreference(newAggregate) {
@@ -123,6 +118,7 @@ async function updateAggregatePreference(newAggregate) {
         addLoader();
         currentAggregateSelection = newAggregate;
     }
+    chart = new TokenChart();
     await pullChartData();
 }
 
@@ -151,6 +147,7 @@ async function pullChartData() {
     else {
         for (let i = 0; i < chartData[currentRegionSelection].length; i++) {
             await chart.addDataToChart(chartData[currentRegionSelection][i]);
+            console.warn("This should never hit, and should be okay to remove");
         }
     }
     removeLoader();
@@ -190,6 +187,8 @@ function detectTimeQuery(urlSearchParams) {
                 timeDDL.options[i].selected = true;
             }
         }
+        updateHighTime();
+        updateLowTime();
     } else {
         console.warn("An incorrect or malformed time selection was made in the query string");
     }

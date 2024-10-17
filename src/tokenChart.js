@@ -11,6 +11,20 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-dayjs-3';
 
+Chart.register(
+    LineElement,
+    PointElement,
+    LineController,
+    LinearScale,
+    TimeSeriesScale,
+    Legend,
+    Title,
+    Tooltip
+)
+
+import {updateHighVal} from "./highTime";
+import {updateLowVal} from "./lowTime";
+
 function lookupTimeUnit(query){
     const lookup = {
         'h': 'day',
@@ -27,31 +41,41 @@ export default class TokenChart {
         this._context = document.getElementById("token-chart").getContext('2d');
         this._chartActive = false;
         this._lastDatum = null;
-        this._lateUpdate = true
+        this._highDatum = null;
+        this._lowDatum = null;
+        this._lateUpdate = false;
     }
 
-    async createChart(region, time, yLevel, data = []) {
+    get highDatum() {
+        return this._highDatum;
+    }
+
+    get lowDatum() {
+        return this._lowDatum;
+    }
+
+    async createChart(region, time, yLevel, data) {
         const chartData = [];
         let lateUpdateData = this._lastDatum;
 
         for (let i = 0; i < data.length; i++) {
             this._lastDatum = data[i];
+            if (this._highDatum === null || this._lastDatum.getPrice() > this._highDatum.getPrice()) {
+                this._highDatum = data[i];
+            }
+
+            if (this._lowDatum === null || this._lowDatum.getPrice() > this._lastDatum.getPrice()) {
+                this._lowDatum = data[i];
+            }
+
             chartData.push({
                 x: data[i].getX(),
                 y: data[i].getY(),
             })
         }
 
-        if (this._lateUpdate) {
-            if (this._lastDatum.getPrice() !== lateUpdateData.getPrice() &&
-                this._lastDatum.getTime() < lateUpdateData.getTime()) {
-                chartData.push({
-                    x: lateUpdateData.getX(),
-                    y: lateUpdateData.getY(),
-                })
-            }
-            this._lateUpdate = false
-        }
+        updateHighVal(this.highDatum);
+        updateLowVal(this.lowDatum);
 
         this._chart = new Chart(this._context, {
             type: 'line',
@@ -100,12 +124,25 @@ export default class TokenChart {
                 },
             }
         });
+
+        if (this._lateUpdate) {
+            if (this._lastDatum.getPrice() !== lateUpdateData.getPrice() &&
+                this._lastDatum.getTime() < lateUpdateData.getTime()) {
+                await this.addDataToChart(lateUpdateData);
+            }
+            this._lateUpdate = false
+        }
+
         this._chartActive = true;
     }
 
     async destroyChart() {
         await this._chart.destroy();
         this._chartActive = false;
+        this._lastDatum = null;
+        this._highDatum = null;
+        this._lowDatum = null;
+        this._lateUpdate = false;
     }
 
     async lateUpdate(datum){
@@ -114,6 +151,15 @@ export default class TokenChart {
     }
 
     async addDataToChart(datum) {
+        this._lastDatum = datum;
+        if (datum.getPrice() > this._highDatum.getPrice()) {
+            this._highDatum = datum;
+            updateHighVal(this.highDatum);
+        }
+        else if (datum.getPrice() < this._lowDatum.getPrice()) {
+            this._lowDatum = datum;
+            updateLowVal(this.lowDatum);
+        }
         this._chart.data.datasets.forEach((dataset) => {
             dataset.data.push({
                 x: datum.getX(),
