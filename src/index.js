@@ -69,25 +69,6 @@ async function updateRegionalToken(region, data) {
     }
 }
 
-async function aggregateFunctionToggle() {
-    // TODO: We should probably make these global or something
-    //  so if the need to be updated in the future we can do so easily
-    const smallTimes = ['72h', '168h', '336h'];
-    const longTimes = ['720h', '30d', '2190h', '90d', '1y', '2y', '6m', 'all'];
-    const idsToModify = ['agg_wavg']
-    if (smallTimes.includes(currentTimeSelection)) {
-        for (const id of idsToModify) {
-            let ele = document.getElementById(id);
-            ele.disabled = true;
-        }
-    } else if (longTimes.includes(currentTimeSelection)) {
-        for (const id of idsToModify) {
-            let ele = document.getElementById(id);
-            ele.disabled = false;
-        }
-    }
-}
-
 async function updateRegionPreference(newRegion) {
     if (newRegion !== currentRegionSelection) {
         await chart.destroyChart();
@@ -104,7 +85,6 @@ async function updateTimePreference(newTime) {
         await chart.destroyChart();
         addLoader();
         currentTimeSelection = newTime;
-        await aggregateFunctionToggle();
     }
     chart = new TokenChart();
     await pullChartData();
@@ -195,7 +175,7 @@ function detectTimeQuery(urlSearchParams) {
 }
 
 function detectAggregateQuery(urlSearchParams) {
-    const validOperations = ['none', 'daily_mean', 'weekly_mean'];
+    const validOperations = ['none', 'daily_mean'];
     if (validOperations.includes(urlSearchParams.get('aggregate').toLowerCase())) {
         currentAggregateSelection = urlSearchParams.get('aggregate').toLowerCase();
         let aggregateDDL = document.getElementById('aggregate');
@@ -204,7 +184,6 @@ function detectAggregateQuery(urlSearchParams) {
                 aggregateDDL.options[i].selected = true;
             }
         }
-        aggregateFunctionToggle();
     } else {
         console.warn("An incorrect or malformed aggregate selection was made in the query string");
     }
