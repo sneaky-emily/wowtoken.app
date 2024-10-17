@@ -1,15 +1,4 @@
-import {
-    Chart,
-    Legend,
-    LinearScale,
-    LineController,
-    LineElement,
-    PointElement,
-    TimeSeriesScale,
-    Title,
-    Tooltip
-} from 'chart.js';
-import 'chartjs-adapter-dayjs-3';
+import 'chartjs-adapter-dayjs-4';
 import "./style.css"
 
 import fetchCurrent from "./fetchCurrent";

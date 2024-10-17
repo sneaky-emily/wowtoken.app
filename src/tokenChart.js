@@ -9,7 +9,7 @@ import {
     Title,
     Tooltip
 } from 'chart.js';
-import 'chartjs-adapter-dayjs-3';
+import 'chartjs-adapter-dayjs-4';
 
 Chart.register(
     LineElement,
