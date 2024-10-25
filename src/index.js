@@ -15,6 +15,7 @@ let currentRegionSelection = '';
 let currentTimeSelection = '';
 let currentAggregateSelection = '';
 let startYAtZero = false;
+let datum;
 let chart;
 const currentPriceHash = {
     us: 0,
@@ -47,7 +48,7 @@ async function updateRegionalToken(region, data) {
         currentPriceHash[region] = data['price_data'][region];
         if (region === currentRegionSelection) {
             formatToken();
-            const datum = new Datum(Date.parse(data['current_time']), data['price_data'][region]);
+            datum = new Datum(Date.parse(data['update_times'][region]), data['price_data'][region]);
             if (currentAggregateSelection === 'none' && chart.active()) {
                 await chart.addDataToChart(datum);
             }
