@@ -8,7 +8,7 @@
         <link rel="preconnect" href="https://data.wowtoken.app">
 	    <link rel="dns-prefetch" href="https://data.wowtoken.app">
         <link rel="preload" href="https://data.wowtoken.app/v2/current/classic.json" as="fetch" type="application/json" crossorigin="anonymous">
-        <link rel="preload" href="https://data.wowtoken.app/classic/token/history/us/72h.json" as="fetch" type="application/json" crossorigin="anonymous">
+        <link rel="preload" href="https://data.wowtoken.app/v2/relative/classic/us/72h.json" as="fetch" type="application/json" crossorigin="anonymous">
     </head>
     <body>
         <div class="flex-container">
@@ -59,7 +59,7 @@
                             <label for="aggregate">Smoothing Function:</label>
                             <select name="aggregate" id="aggregate">
                                 <option id='agg_none' value="none">None</option>
-                                <option id='agg_davg' value="daily_mean">Daily Average</option>
+                                <option id='agg_davg' value="avg">Daily Average</option>
                             </select>
                         </fieldset>
                         <fieldset id="y-start-options">
