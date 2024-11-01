@@ -7,7 +7,7 @@
         <meta name="description" content="Track current and historical gold price trends for the World of Warcraft (WoW) Classic in game token, including the US, EU, TW, and KR regions. Prices updated every minute. Simple, quick, and easy info, no ads or tracking, ever.">
         <link rel="preconnect" href="https://data.wowtoken.app">
 	    <link rel="dns-prefetch" href="https://data.wowtoken.app">
-        <link rel="preload" href="https://data.wowtoken.app/classic/token/current.json" as="fetch" type="application/json" crossorigin="anonymous">
+        <link rel="preload" href="https://data.wowtoken.app/v2/current/classic.json" as="fetch" type="application/json" crossorigin="anonymous">
         <link rel="preload" href="https://data.wowtoken.app/classic/token/history/us/72h.json" as="fetch" type="application/json" crossorigin="anonymous">
     </head>
     <body>
@@ -42,6 +42,9 @@
                                 <option value="336h">14 Days</option>
                                 <option value="720h">1 Month</option>
                                 <option value="90d">3 Months</option>
+                                <option value="6m">6 Months</option>
+                                <option value="1y">1 Year</option>
+                                <option value="2y">2 Years</option>
                                 <option value="all">All Available</option>
                             </select>
                         </div>

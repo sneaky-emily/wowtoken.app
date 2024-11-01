@@ -44,11 +44,11 @@ async function updateTokens(data) {
 }
 
 async function updateRegionalToken(region, data) {
-    if (currentPriceHash[region] !== data['price_data'][region]) {
-        currentPriceHash[region] = data['price_data'][region];
+    if (currentPriceHash[region] !== data[region][1]) {
+        currentPriceHash[region] = data[region][1];
         if (region === currentRegionSelection) {
             formatToken();
-            datum = new Datum(Date.parse(data['update_times'][region]), data['price_data'][region]);
+            datum = new Datum(Date.parse(data[region][0]), data[region][1]);
             if (currentAggregateSelection === 'none' && chart.active()) {
                 await chart.addDataToChart(datum);
             }
