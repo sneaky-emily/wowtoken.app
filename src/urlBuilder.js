@@ -1,8 +1,12 @@
 export default function urlBuilder(currentRegionSelection, currentTimeSelection, currentAggregateSelection) {
-    let url = "https://data.wowtoken.app/token/history/";
-    if (currentAggregateSelection !== 'none') {
-        url += `${currentAggregateSelection}/`
+    let url = "https://data.wowtoken.app/v2/";
+    if (currentAggregateSelection !== '' && currentAggregateSelection !== 'none'){
+        url += `math/${currentAggregateSelection}/retail/`
     }
-    url += `${currentRegionSelection}/${currentTimeSelection}.json`
+    else {
+        url += `relative/retail/`
+    }
+
+    url += `${currentRegionSelection}/${currentTimeSelection}.json`;
     return url;
 }
