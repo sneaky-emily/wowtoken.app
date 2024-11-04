@@ -165,9 +165,13 @@ function detectTimeQuery(urlSearchParams) {
 }
 
 function detectAggregateQuery(urlSearchParams) {
-    const validOperations = ['none', 'daily_mean'];
+    const validOperations = ['none', 'daily_mean', 'avg'];
     if (validOperations.includes(urlSearchParams.get('aggregate').toLowerCase())) {
         currentAggregateSelection = urlSearchParams.get('aggregate').toLowerCase();
+        // For backwards compatibility
+        if (currentAggregateSelection === 'daily_mean') {
+            currentAggregateSelection = 'avg';
+        }
         let aggregateDDL = document.getElementById('aggregate');
         for (let i = 0; i < aggregateDDL.options.length; i++) {
             if (aggregateDDL.options[i].value === currentAggregateSelection) {
