@@ -6,6 +6,7 @@ import fetchData from "./fetchData";
 import {updateHighTime} from "./highTime";
 import {updateLowTime} from "./lowTime";
 import {addLoader, removeLoader} from "./loader";
+import {allowOverlay, forceOverlayOff, isOverlaySelected} from "./overlay";
 import TokenChart from "./tokenChart";
 import Datum from "./datum";
 
@@ -66,7 +67,6 @@ async function updateRegionPreference(newRegion) {
         currentRegionSelection = newRegion;
     }
     formatToken();
-    chart = new TokenChart();
     await pullChartData();
 }
 
@@ -76,7 +76,12 @@ async function updateTimePreference(newTime) {
         addLoader();
         currentTimeSelection = newTime;
     }
-    chart = new TokenChart();
+    if (newTime === "all") {
+        forceOverlayOff();
+    }
+    else {
+        allowOverlay();
+    }
     await pullChartData();
     updateHighTime();
     updateLowTime();
@@ -88,7 +93,6 @@ async function updateAggregatePreference(newAggregate) {
         addLoader();
         currentAggregateSelection = newAggregate;
     }
-    chart = new TokenChart();
     await pullChartData();
 }
 
@@ -109,16 +113,28 @@ function toggleStartYAtZero(){
     chart.toggleYStart(startYAtZero);
 }
 
+async function toggleOverlay() {
+    await chart.destroyChart();
+    addLoader();
+    await pullChartData();
+}
+
 async function pullChartData() {
-    chartData[currentRegionSelection] = await fetchData(currentRegionSelection, currentTimeSelection, currentAggregateSelection);
+    let timeSelection = currentTimeSelection;
+    if (isOverlaySelected()) {
+        let timeDigits = parseInt(timeSelection.slice(0, timeSelection.length - 1)) * 2;
+        let timeUnit = timeSelection.slice(timeSelection.length - 1);
+        timeSelection = `${timeDigits}${timeUnit}`;
+    }
+    chartData[currentRegionSelection] = await fetchData(currentRegionSelection, timeSelection, currentAggregateSelection);
     if (!chart.active()) {
         await chart.createChart(currentRegionSelection, currentTimeSelection, startYAtZero, chartData[currentRegionSelection]);
     }
     else {
         for (let i = 0; i < chartData[currentRegionSelection].length; i++) {
             await chart.addDataToChart(chartData[currentRegionSelection][i]);
-            console.warn("This should never hit, and should be okay to remove");
         }
+        console.warn("This should never hit, and should be okay to remove");
     }
     removeLoader();
 }
@@ -151,6 +167,9 @@ function detectTimeQuery(urlSearchParams) {
     const validTimes = ['72h', '168h', '336h', '720h', '30d', '2190h', '90d', '1y', '2y', '6m', 'all'];
     if (validTimes.includes(urlSearchParams.get('time').toLowerCase())) {
         currentTimeSelection = urlSearchParams.get('time').toLowerCase();
+        if (currentTimeSelection === 'all') {
+            forceOverlayOff();
+        }
         let timeDDL = document.getElementById('time');
         for (let i = 0; i < timeDDL.options.length; i++) {
             if (timeDDL.options[i].value === currentTimeSelection) {
@@ -249,12 +268,17 @@ function registerEventHandles() {
     registerAdvancedHandlers();
 }
 
+// TODO: These need to be moved out into probably tokenChart if not other files
+
 function registerAdvancedHandlers() {
     document.getElementById('enable-advanced').addEventListener('change', () => {
         toggleAdvancedSetting();
     })
     document.getElementById('y-start').addEventListener('change', () => {
         toggleStartYAtZero();
+    })
+    document.getElementById('period-overlay').addEventListener('change', () => {
+        toggleOverlay();
     })
 }
 
