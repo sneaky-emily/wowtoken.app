@@ -19,9 +19,22 @@ function forceOverlayOff(){
     periodOverlayField.style.display = 'none';
 }
 
+function forceOverlayOn(){
+    const overlaySetting = document.getElementById("period-overlay");
+    const periodOverlayField = document.getElementById("period-overlay-options");
+    const advancedOptionsField = document.getElementById("advanced-options");
+    overlaySetting.checked = true;
+    advancedOptionsField.style.display = 'flex';
+    periodOverlayField.style.display = 'flex';
+}
+
+function isOverlayAllowed(timeSelection) {
+    return !(timeSelection === "all")
+}
+
 function allowOverlay(){
     const periodOverlayField = document.getElementById("period-overlay-options");
     periodOverlayField.style.display = 'flex';
 }
 
-export {isOverlaySelected, getOverlayTime, setOverlayLabelTime, forceOverlayOff, allowOverlay};
+export {isOverlaySelected, getOverlayTime, setOverlayLabelTime, forceOverlayOff, forceOverlayOn, isOverlayAllowed, allowOverlay};
