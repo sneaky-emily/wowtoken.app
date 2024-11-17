@@ -6,7 +6,7 @@ import fetchData from "./fetchData";
 import {updateHighTime} from "./highTime";
 import {updateLowTime} from "./lowTime";
 import {addLoader, removeLoader} from "./loader";
-import {allowOverlay, forceOverlayOff, isOverlaySelected} from "./overlay";
+import {allowOverlay, forceOverlayOff, forceOverlayOn, isOverlayAllowed, isOverlaySelected} from "./overlay";
 import TokenChart from "./tokenChart";
 import Datum from "./datum";
 
@@ -212,6 +212,15 @@ function detectZeroQuery(urlSearchParams) {
     toggleStartYAtZero();
 }
 
+function detectOverlayQuery(urlSearchParams) {
+    const enableOverlay = urlSearchParams.get('overlay') === 'previous_time';
+    if (enableOverlay) {
+        forceOverlayOn();
+    } else {
+        forceOverlayOff();
+    }
+}
+
 function detectURLQuery() {
     const urlSearchParams = new URLSearchParams(window.location.search);
     if (urlSearchParams.has('region')) {
@@ -225,6 +234,9 @@ function detectURLQuery() {
     }
     if (urlSearchParams.has('startAtZero')) {
         detectZeroQuery(urlSearchParams)
+    }
+    if (urlSearchParams.has('overlay')) {
+        detectOverlayQuery(urlSearchParams);
     }
 }
 
@@ -241,6 +253,9 @@ function buildDeepLinksURL() {
     }
     if (startYAtZero !== false){
         url += `startAtZero=${startYAtZero}&`
+    }
+    if (isOverlaySelected()){
+        url += `overlay=previous_time&`
     }
     return url
 }
