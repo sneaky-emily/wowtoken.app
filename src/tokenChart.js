@@ -25,6 +25,7 @@ Chart.register(
 import {updateHighVal} from "./highTime";
 import {updateLowVal} from "./lowTime";
 import {isOverlaySelected, getOverlayTime, setOverlayLabelTime} from "./overlay";
+import Datum from "./datum";
 
 function lookupTimeUnit(query){
     const lookup = {
@@ -77,6 +78,22 @@ export default class TokenChart {
         this._chart = new Chart(this._context, chartConfig);
     }
 
+    async #updateHighLow(datum) {
+        if (this._highDatum === null) {
+            this._highDatum = new Datum(datum.getTime(), 0);
+            this._lowDatum = datum;
+            return;
+        }
+        if (datum.getPrice() > this._highDatum.getPrice()) {
+            this._highDatum = datum;
+            updateHighVal(this.highDatum);
+        }
+        else if (datum.getPrice() < this._lowDatum.getPrice()) {
+            this._lowDatum = datum;
+            updateLowVal(this.lowDatum);
+        }
+    }
+
     async #createOverlayChart(region, time, yLevel, data){
         const chartData = [];
         const overlayData = [];
@@ -91,15 +108,7 @@ export default class TokenChart {
                 });
             }
             else {
-
-                this._lastDatum = data[i];
-                if (this._highDatum === null || this._lastDatum.getPrice() > this._highDatum.getPrice()) {
-                    this._highDatum = data[i];
-                }
-
-                if (this._lowDatum === null || this._lowDatum.getPrice() > this._lastDatum.getPrice()) {
-                    this._lowDatum = data[i];
-                }
+                await this.#updateHighLow(data[i]);
 
                 chartData.push({
                     x: data[i].getX(),
@@ -174,13 +183,7 @@ export default class TokenChart {
 
         for (let i = 0; i < data.length; i++) {
             this._lastDatum = data[i];
-            if (this._highDatum === null || this._lastDatum.getPrice() > this._highDatum.getPrice()) {
-                this._highDatum = data[i];
-            }
-
-            if (this._lowDatum === null || this._lowDatum.getPrice() > this._lastDatum.getPrice()) {
-                this._lowDatum = data[i];
-            }
+            await this.#updateHighLow(data[i]);
 
             chartData.push({
                 x: data[i].getX(),
@@ -289,7 +292,10 @@ export default class TokenChart {
             this._lowDatum = datum;
             updateLowVal(this.lowDatum);
         }
-        this._chart.data.datasets[0].data.push(datum);
+        this._chart.data.datasets[0].data.push({
+            x: datum.getX(),
+            y: datum.getY(),
+        });
         this._chart.update();
     }
 
