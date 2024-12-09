@@ -420,6 +420,16 @@ details[open] summary {
     margin: 10px;
 }
 
+.other-projects {
+    border: 1px solid silver;
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.other-projects > p {
+    line-height: 1em;
+}
+
 .data-header h1 {
     margin-top: 24px;
     margin-bottom: 24px;
