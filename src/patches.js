@@ -27,6 +27,7 @@ const patches = [
   // Midnight
   { label: "Midnight Pre-Patch", date: "2026-01-20" },
   { label: "Midnight Launch", date: "2026-03-02" },
+  { label: "Midnight Season 1", date: "2026-03-17" },
 ];
 
 export default patches;
