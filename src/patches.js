@@ -28,6 +28,17 @@ const patches = [
   { label: "Midnight Pre-Patch", date: "2026-01-20" },
   { label: "Midnight Launch", date: "2026-03-02" },
   { label: "Midnight Season 1", date: "2026-03-17" },
+  // { label: "Midnight Season 2", date: "yyyy-mm-dd" },
+  // { label: "Midnight Season 3", date: "yyyy-mm-dd" },
+  // { label: "Midnight Season 4", date: "yyyy-mm-dd" },
+
+  // The Last Titan
+  // { label: "The Last Titan Pre-Patch", date: "yyyy-mm-dd" },
+  // { label: "The Last Titan Launch",    date: "yyyy-mm-dd" },
+  // { label: "The Last Titan Season 1",  date: "yyyy-mm-dd" },
+  // { label: "The Last Titan Season 2",  date: "yyyy-mm-dd" },
+  // { label: "The Last Titan Season 3",  date: "yyyy-mm-dd" },
+  // { label: "The Last Titan Season 4",  date: "yyyy-mm-dd" },
 ];
 
 export default patches;
