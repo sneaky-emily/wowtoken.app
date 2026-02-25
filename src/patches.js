@@ -1,4 +1,5 @@
 // This file contains major WoW patches only, minor patches such as quality of life patches are not included as they have very little impact on token price
+// Needs continious updates as patches roll out and/or announced
 
 const patches = [
   // Shadowlands

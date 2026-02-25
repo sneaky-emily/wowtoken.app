@@ -61,6 +61,9 @@ function buildPatchLinePlugin() {
   return {
     id: "patchLines",
     afterDraw(chart) {
+      const checkbox = document.getElementById('show-patches');
+      if (!checkbox?.checked) return;
+
       const ctx = chart.ctx;
       const xAxis = chart.scales.x;
       const yAxis = chart.scales.y;
@@ -73,32 +76,23 @@ function buildPatchLinePlugin() {
 
         ctx.save();
 
-        ctx.beginPath();
-        ctx.moveTo(x, yAxis.top);
-        ctx.lineTo(x, yAxis.bottom);
-        ctx.lineWidth = 12;
-        ctx.strokeStyle = "rgba(0, 220, 255, 0.08)";
-        ctx.setLineDash([]);
-        ctx.stroke();
+        const drawLine = (width, dash, opacity) => {
+          ctx.beginPath();
+          ctx.moveTo(x, yAxis.top);
+          ctx.lineTo(x, yAxis.bottom);
+          ctx.lineWidth = width;
+          ctx.strokeStyle = `rgba(0, 220, 255, ${opacity})`;
+          ctx.setLineDash(dash);
+          ctx.stroke();
+        };
 
-        ctx.beginPath();
-        ctx.moveTo(x, yAxis.top);
-        ctx.lineTo(x, yAxis.bottom);
-        ctx.lineWidth = 5;
-        ctx.strokeStyle = "rgba(0, 220, 255, 0.2)";
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(x, yAxis.top);
-        ctx.lineTo(x, yAxis.bottom);
-        ctx.lineWidth = 1.5;
-        ctx.strokeStyle = "rgba(0, 220, 255, 0.9)";
-        ctx.setLineDash([6, 3]);
-        ctx.stroke();
+        drawLine(12, [], 0.08);
+        drawLine(5, [], 0.2);
+        drawLine(1.5, [6, 3], 0.9);
 
         ctx.restore();
       });
-    },
+    }
   };
 }
 
@@ -121,9 +115,15 @@ export default class TokenChart {
         return this._lowDatum;
     }
 
-    async #newChart(chartConfig) {
+  async #newChart(chartConfig) {
     this._chart = new Chart(this._context, chartConfig);
     this.#attachPatchTooltip();
+
+    document.getElementById("show-patches")?.addEventListener("change", () => {
+        if (this.active()) {
+            this._chart.update();
+        }
+    });
   }
 
   #attachPatchTooltip() {
