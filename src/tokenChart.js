@@ -26,6 +26,7 @@ import {updateHighVal} from "./highTime";
 import {updateLowVal} from "./lowTime";
 import {isOverlaySelected, getOverlayTime, setOverlayLabelTime} from "./overlay";
 import Datum from "./datum";
+import patches from "./patches";
 
 function lookupTimeUnit(query){
     const lookup = {
@@ -56,6 +57,45 @@ function timeDeltaInMilliseconds(time) {
     }
 }
 
+function buildPatchLinePlugin() {
+  return {
+    id: "patchLines",
+    afterDraw(chart) {
+      const checkbox = document.getElementById('show-patches');
+      if (!checkbox?.checked) return;
+
+      const ctx = chart.ctx;
+      const xAxis = chart.scales.x;
+      const yAxis = chart.scales.y;
+
+      patches.forEach((patch) => {
+        const ts = new Date(patch.date).getTime();
+        if (ts < xAxis.min || ts > xAxis.max) return;
+
+        const x = xAxis.getPixelForValue(ts);
+
+        ctx.save();
+
+        const drawLine = (width, dash, opacity) => {
+          ctx.beginPath();
+          ctx.moveTo(x, yAxis.top);
+          ctx.lineTo(x, yAxis.bottom);
+          ctx.lineWidth = width;
+          ctx.strokeStyle = `rgba(0, 220, 255, ${opacity})`;
+          ctx.setLineDash(dash);
+          ctx.stroke();
+        };
+
+        drawLine(12, [], 0.08);
+        drawLine(5, [], 0.2);
+        drawLine(1.5, [6, 3], 0.9);
+
+        ctx.restore();
+      });
+    }
+  };
+}
+
 export default class TokenChart {
     constructor() {
         this._context = document.getElementById("token-chart").getContext('2d');
@@ -64,6 +104,7 @@ export default class TokenChart {
         this._highDatum = null;
         this._lowDatum = null;
         this._lateUpdate = false;
+        this._patchTooltipListener = null;
     }
 
     get highDatum() {
@@ -74,9 +115,50 @@ export default class TokenChart {
         return this._lowDatum;
     }
 
-    async #newChart(chartConfig) {
-        this._chart = new Chart(this._context, chartConfig);
+  async #newChart(chartConfig) {
+    this._chart = new Chart(this._context, chartConfig);
+    this.#attachPatchTooltip();
+
+    document.getElementById("show-patches")?.addEventListener("change", () => {
+        if (this.active()) {
+            this._chart.update();
+        }
+    });
+  }
+
+  #attachPatchTooltip() {
+    const canvas = this._context.canvas;
+    const tooltip = document.getElementById("patch-tooltip");
+
+    if (this._patchTooltipListener) {
+      canvas.removeEventListener("mousemove", this._patchTooltipListener);
     }
+
+    this._patchTooltipListener = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const xAxis = this._chart.scales.x;
+      let found = null;
+
+      patches.forEach((patch) => {
+        const ts = new Date(patch.date).getTime();
+        if (ts < xAxis.min || ts > xAxis.max) return;
+        const lineX = xAxis.getPixelForValue(ts);
+        if (Math.abs(mouseX - lineX) < 8) found = patch;
+      });
+
+      if (found) {
+        tooltip.style.display = "block";
+        tooltip.style.left = e.clientX + 12 + "px";
+        tooltip.style.top = e.clientY - 28 + "px";
+        tooltip.textContent = found.label;
+      } else {
+        tooltip.style.display = "none";
+      }
+    };
+
+    canvas.addEventListener("mousemove", this._patchTooltipListener);
+  }
 
     async #updateHighLow(datum) {
         if (this._highDatum === null) {
@@ -171,8 +253,9 @@ export default class TokenChart {
                         }
                     }
                 },
-            }
-        }
+            },
+            plugins: [buildPatchLinePlugin()],
+        };
 
         await this.#newChart(chartConfig)
     }
@@ -236,8 +319,9 @@ export default class TokenChart {
                         }
                     }
                 },
-            }
-        }
+            },
+            plugins: [buildPatchLinePlugin()],
+        };
 
         await this.#newChart(chartConfig)
     }

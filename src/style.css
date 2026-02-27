@@ -530,3 +530,21 @@ details[open] summary {
         opacity: 0;
     }
 }
+
+
+#patch-tooltip {
+    display: none;
+    position: fixed;
+    background: #111;
+    color: #ffd700;
+    border: 2px solid #ffd700;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
