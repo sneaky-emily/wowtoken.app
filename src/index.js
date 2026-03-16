@@ -31,7 +31,7 @@ const lastKnownTimestamps = {
     tw: null
 };
 
-const UPDATE_INTERVAL_MS = 20 * 60 * 1000;
+const UPDATE_INTERVAL_MS = (20 * 60 * 1000) + (1000 * 30); // 20 minutes + 30 seconds
 const POLL_INTERVAL_MS = 30 * 1000;
 
 let updateTimer = null;
