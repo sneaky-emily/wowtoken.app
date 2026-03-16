@@ -17,7 +17,7 @@
   "dependencies": {
     "chart.js": "^4.4.5",
     "chartjs-adapter-dayjs-4": "^1.0.4",
-    "css-minimizer-webpack-plugin": "^7.0.0",
+    "css-minimizer-webpack-plugin": "^8.0.0",
     "dayjs": "^1.11.13"
   }
 }
