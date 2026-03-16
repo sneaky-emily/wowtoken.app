@@ -190,6 +190,7 @@ export default class TokenChart {
                 });
             }
             else {
+                this._lastDatum = data[i];
                 await this.#updateHighLow(data[i]);
 
                 chartData.push({

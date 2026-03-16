@@ -1,5 +1,3 @@
-import Datum from "./datum";
-
 function updateLowTime() {
     const lowTime= document.getElementById("low-time");
 

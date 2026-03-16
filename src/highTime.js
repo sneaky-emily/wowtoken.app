@@ -1,6 +1,3 @@
-import Datum from "./datum";
-
-
 function updateHighTime() {
     const highTime= document.getElementById("high-time");
 

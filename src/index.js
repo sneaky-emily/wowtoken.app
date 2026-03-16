@@ -6,7 +6,7 @@ import fetchData from "./fetchData";
 import {updateHighTime} from "./highTime";
 import {updateLowTime} from "./lowTime";
 import {addLoader, removeLoader} from "./loader";
-import {allowOverlay, forceOverlayOff, forceOverlayOn, isOverlayAllowed, isOverlaySelected} from "./overlay";
+import {allowOverlay, forceOverlayOff, forceOverlayOn, isOverlaySelected} from "./overlay";
 import TokenChart from "./tokenChart";
 import Datum from "./datum";
 
@@ -24,6 +24,88 @@ const currentPriceHash = {
     kr: 0,
     tw: 0
 };
+const lastKnownTimestamps = {
+    us: null,
+    eu: null,
+    kr: null,
+    tw: null
+};
+
+const UPDATE_INTERVAL_MS = 20 * 60 * 1000;
+const POLL_INTERVAL_MS = 30 * 1000;
+
+let updateTimer = null;
+let updateTimerMode = null; // 'timeout' | 'interval'
+
+function clearUpdateTimer() {
+    if (updateTimer !== null) {
+        if (updateTimerMode === 'timeout') clearTimeout(updateTimer);
+        else clearInterval(updateTimer);
+        updateTimer = null;
+        updateTimerMode = null;
+    }
+}
+
+function scheduleSmartUpdate(checkImmediately = false) {
+    clearUpdateTimer();
+    const timestamp = lastKnownTimestamps[currentRegionSelection];
+    if (!timestamp) {
+        updateTimer = setTimeout(checkAndReschedule, 60 * 1000);
+        updateTimerMode = 'timeout';
+        return;
+    }
+    const delay = new Date(timestamp).getTime() + UPDATE_INTERVAL_MS - Date.now();
+    if (delay <= 0) {
+        if (checkImmediately) {
+            checkAndReschedule();
+        } else {
+            enterPollingMode();
+        }
+    } else {
+        updateTimer = setTimeout(checkAndReschedule, delay);
+        updateTimerMode = 'timeout';
+    }
+}
+
+async function checkAndReschedule() {
+    updateTimer = null;
+    updateTimerMode = null;
+    const region = currentRegionSelection;
+    const prevTimestamp = lastKnownTimestamps[region];
+    try {
+        await callUpdateURL();
+    } catch (e) {
+        console.error("Failed to fetch current token price, retrying in 30s", e);
+        updateTimer = setTimeout(checkAndReschedule, POLL_INTERVAL_MS);
+        updateTimerMode = 'timeout';
+        return;
+    }
+    if (region !== currentRegionSelection) return;
+    if (lastKnownTimestamps[region] !== prevTimestamp) {
+        scheduleSmartUpdate();
+    } else {
+        enterPollingMode();
+    }
+}
+
+function enterPollingMode() {
+    clearUpdateTimer();
+    updateTimer = setInterval(async () => {
+        const region = currentRegionSelection;
+        const prevTimestamp = lastKnownTimestamps[region];
+        try {
+            await callUpdateURL();
+        } catch (e) {
+            console.error("Failed to fetch current token price, will retry on next interval", e);
+            return;
+        }
+        if (region !== currentRegionSelection) return;
+        if (lastKnownTimestamps[region] !== prevTimestamp) {
+            scheduleSmartUpdate();
+        }
+    }, POLL_INTERVAL_MS);
+    updateTimerMode = 'interval';
+}
 const chartData = {
     us: [],
     eu: [],
@@ -45,6 +127,7 @@ async function updateTokens(data) {
 }
 
 async function updateRegionalToken(region, data) {
+    lastKnownTimestamps[region] = data[region][0];
     if (currentPriceHash[region] !== data[region][1]) {
         currentPriceHash[region] = data[region][1];
         if (region === currentRegionSelection) {
@@ -65,6 +148,7 @@ async function updateRegionPreference(newRegion) {
         await chart.destroyChart();
         addLoader();
         currentRegionSelection = newRegion;
+        scheduleSmartUpdate(true);
     }
     formatToken();
     await pullChartData();
@@ -327,8 +411,9 @@ document.addEventListener('DOMContentLoaded', function () {
     chart = new TokenChart();
     Promise.all([
         callUpdateURL(),
-    ]).then(pullChartData);
-
-    setInterval(callUpdateURL, 60*1000);
+    ]).then(() => {
+        scheduleSmartUpdate();
+        return pullChartData();
+    });
 }, false);
 
